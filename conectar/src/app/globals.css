@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --conectar-green-950: #0b2817;
+  --conectar-green-900: #10351f;
+  --conectar-green-800: #194828;
+  --conectar-green-700: #205a34;
+  --conectar-green-600: #2b6b40;
+  --conectar-green-500: #3c7c50;
+  --conectar-green-200: #cfe0d4;
+  --conectar-green-100: #e7f0e9;
+  --conectar-green-50: #f3f7f4;
+  --conectar-ink: #172019;
+  --conectar-ink-soft: #334139;
+  --conectar-muted: #68736c;
+  --conectar-muted-light: #8b948e;
+  --conectar-border: #dde3de;
+  --conectar-border-soft: #e9ede9;
+  --conectar-surface: #ffffff;
+  --conectar-canvas: #f8f9f6;
+  --conectar-warm-canvas: #f6f4ee;
+  --background: var(--conectar-canvas);
+  --foreground: var(--conectar-ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-conectar-green-950: var(--conectar-green-950);
+  --color-conectar-green-900: var(--conectar-green-900);
+  --color-conectar-green-800: var(--conectar-green-800);
+  --color-conectar-green-700: var(--conectar-green-700);
+  --color-conectar-green-600: var(--conectar-green-600);
+  --color-conectar-green-500: var(--conectar-green-500);
+  --color-conectar-green-200: var(--conectar-green-200);
+  --color-conectar-green-100: var(--conectar-green-100);
+  --color-conectar-green-50: var(--conectar-green-50);
+  --color-conectar-ink: var(--conectar-ink);
+  --color-conectar-ink-soft: var(--conectar-ink-soft);
+  --color-conectar-muted: var(--conectar-muted);
+  --color-conectar-muted-light: var(--conectar-muted-light);
+  --color-conectar-border: var(--conectar-border);
+  --color-conectar-border-soft: var(--conectar-border-soft);
+  --color-conectar-surface: var(--conectar-surface);
+  --color-conectar-canvas: var(--conectar-canvas);
+  --color-conectar-warm-canvas: var(--conectar-warm-canvas);
+  --font-sans: var(--font-inter);
+  --font-editorial: var(--font-cormorant);
+}
+
+* {
+  border-color: var(--conectar-border);
+}
+
+html {
+  background: var(--conectar-canvas);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--conectar-green-700);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
