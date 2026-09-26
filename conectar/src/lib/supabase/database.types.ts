@@ -163,6 +163,7 @@ export type Database = {
           status: Database["public"]["Enums"]["event_status"];
           timezone: string;
           updated_at: string;
+          venue_name: string | null;
         };
         Insert: {
           access_code_hash?: string | null;
@@ -176,6 +177,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["event_status"];
           timezone?: string;
           updated_at?: string;
+          venue_name?: string | null;
         };
         Update: {
           access_code_hash?: string | null;
@@ -189,6 +191,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["event_status"];
           timezone?: string;
           updated_at?: string;
+          venue_name?: string | null;
         };
         Relationships: [];
       };
