@@ -1,5 +1,6 @@
 import "server-only";
 import type { ParticipantProfile, PublicProfile } from "@/types/profiles";
+import { rankOpportunities } from "@/lib/matching/opportunities";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 function displayName(firstName: string, lastName: string) {
@@ -89,5 +90,23 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
     targetAudience: profile.target_audience,
     whatIDo: profile.what_i_do,
     whatIOffer: profile.what_i_offer,
+  };
+}
+
+export async function getOpportunities(eventId: string, profileId: string) {
+  const supabase = createServerSupabaseClient();
+  const [{ data: targetTags, error: targetTagsError }, participants] = await Promise.all([
+    supabase.from("profile_tags").select("tags!inner(name, category)").eq("profile_id", profileId).eq("type", "TARGET"),
+    getCheckedInParticipants(eventId),
+  ]);
+  if (targetTagsError) throw new Error("Não foi possível carregar suas oportunidades.");
+
+  const targetSegments = targetTags
+    .filter((assignment) => assignment.tags.category === "segmento")
+    .map((assignment) => assignment.tags.name);
+  const candidates = participants.filter((participant) => participant.id !== profileId);
+  return {
+    hasTargetSegments: targetSegments.length > 0,
+    opportunities: rankOpportunities(targetSegments, candidates),
   };
 }

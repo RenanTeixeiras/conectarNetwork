@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight, Camera } from "lucide-react";
 import { completeGuestOnboarding, type GuestOnboardingState } from "@/actions/guest.actions";
 import { Avatar, Button, SelectField, TextareaField, TextField } from "@/components/ui/primitives";
 
-type Tag = { id: string; name: string };
+type Tag = { category: string | null; id: string; name: string };
 type Values = {
   city: string;
   company: string;
@@ -36,7 +36,9 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
   const [state, formAction, isPending] = useActionState(completeGuestOnboarding, initialState);
   const [offerTagIds, setOfferTagIds] = useState<string[]>([]);
   const [targetTagIds, setTargetTagIds] = useState<string[]>([]);
-  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: tags[0]?.name ?? "Outro", shareContacts: false, targetAudience: "", whatsapp: "", whatIDo: "", whatIOffer: "" });
+  const segmentTags = tags.filter((tag) => tag.category === "segmento");
+  const offerTags = tags.filter((tag) => tag.category !== "interesse");
+  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, targetAudience: "", whatsapp: "", whatIDo: "", whatIOffer: "" });
   const name = `${firstName} ${lastName}`;
   const headings = ["Quem é você?", "O que você faz e oferece?", "Quem você ajuda e como podem falar com você?"];
   const setValue = <Key extends keyof Values>(key: Key, value: Values[Key]) => setValues((current) => ({ ...current, [key]: value }));
@@ -71,17 +73,17 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
               <div className="flex items-center gap-4"><Avatar name={name} size="lg" /><span className="flex min-h-11 items-center gap-2 text-sm font-medium text-conectar-green-800"><Camera className="size-5" />Adicionar foto <span className="font-normal text-conectar-muted">(opcional)</span></span></div>
               <TextField label="Profissão / Cargo" name="profession" value={values.profession} onChange={(event) => setValue("profession", event.target.value)} required />
               <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
-              <SelectField label="Segmento" name="segment" value={values.segment} onChange={(event) => setValue("segment", event.target.value)}>{tags.map((tag) => <option key={tag.id} value={tag.name}>{tag.name}</option>)}</SelectField>
+              <SelectField label="Segmento" name="segment" value={values.segment} onChange={(event) => setValue("segment", event.target.value)}>{segmentTags.map((tag) => <option key={tag.id} value={tag.name}>{tag.name}</option>)}</SelectField>
               <TextField label="Cidade" name="city" value={values.city} onChange={(event) => setValue("city", event.target.value)} />
             </>}
             {step === 2 && <>
               <TextareaField label="O que você faz?" name="whatIDo" value={values.whatIDo} onChange={(event) => setValue("whatIDo", event.target.value)} helper="Explique em poucas palavras sua atuação profissional." maxLength={500} required />
               <TextareaField label="O que você oferece?" name="whatIOffer" value={values.whatIOffer} onChange={(event) => setValue("whatIOffer", event.target.value)} maxLength={500} required />
-              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Posso ajudar com</legend><div className="flex flex-wrap gap-2">{tags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={offerTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setOfferTagIds)} />)}</div></fieldset>
+              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Posso ajudar com</legend><div className="flex flex-wrap gap-2">{offerTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={offerTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setOfferTagIds)} />)}</div></fieldset>
             </>}
             {step === 3 && <>
               <TextareaField label="Quem você ajuda ou atende?" name="targetAudience" value={values.targetAudience} onChange={(event) => setValue("targetAudience", event.target.value)} helper="Descreva o tipo de pessoa, empresa ou segmento que mais se beneficia do que você oferece." maxLength={500} required />
-              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Cliente ideal</legend><div className="flex flex-wrap gap-2">{tags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setTargetTagIds)} />)}</div></fieldset>
+              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Cliente ideal</legend><p className="text-xs leading-4 text-conectar-muted">Selecione os segmentos de pessoas ou empresas que você quer atender.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setTargetTagIds)} />)}</div></fieldset>
               <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" placeholder="(71) 99999-9999" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
               <TextField label="LinkedIn" name="linkedin" placeholder="linkedin.com/in/seu-perfil" value={values.linkedin} onChange={(event) => setValue("linkedin", event.target.value)} />
               <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />

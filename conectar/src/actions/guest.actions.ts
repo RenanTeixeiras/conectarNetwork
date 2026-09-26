@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createGuestSession } from "@/lib/auth/guest-session";
-import { checkInExistingGuest, createGuestParticipant, findActiveProfilesByNormalizedName, getOpenEventBySlug, type GuestCandidate } from "@/lib/guest";
+import { checkInExistingGuest, createGuestParticipant, findActiveProfilesByNormalizedName, getActiveTags, getOpenEventBySlug, type GuestCandidate } from "@/lib/guest";
 import { normalizeName } from "@/lib/normalization/name";
 import { guestNameSchema, guestOnboardingSchema } from "@/lib/validation/guest";
 
@@ -93,6 +93,10 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
   if (!event) return { error: "Este encontro não está disponível." };
 
   const input = parsed.data;
+  const activeTags = await getActiveTags();
+  if (!input.targetTagIds.every((tagId) => activeTags.some((tag) => tag.id === tagId && tag.category === "segmento"))) {
+    return { error: "Selecione segmentos válidos para o público-alvo." };
+  }
   let profileId: string;
   try {
     profileId = await createGuestParticipant(event.id, {

@@ -109,7 +109,7 @@ export async function getActiveTags() {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("tags")
-    .select("id, name")
+    .select("id, name, category")
     .eq("is_active", true)
     .order("name", { ascending: true });
 
