@@ -6,7 +6,7 @@ import { Divider } from "@/components/ui/primitives";
 
 const links = [
   { key: "presentes", label: "Presentes", icon: Users },
-  { key: "conexoes", label: "Conexões", icon: Handshake },
+  { key: "oportunidades", label: "Oportunidades", icon: Handshake },
   { key: "meu-perfil", label: "Meu perfil", icon: UserRound },
 ];
 

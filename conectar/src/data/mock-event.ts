@@ -8,10 +8,10 @@ export type Profile = {
   bio: string;
   whatIDo: string;
   whatIOffer: string;
-  whatISeek: string;
+  whoIHelp: string;
   tags: string[];
   offerTags: string[];
-  seekTags: string[];
+  targetTags: string[];
   contact: {
     whatsapp?: string;
     linkedin?: string;
@@ -37,10 +37,10 @@ export const currentProfile: Profile = {
   bio: "Crio produtos digitais que tornam processos mais simples e úteis.",
   whatIDo: "Desenvolvo sistemas, integrações, automações e produtos digitais.",
   whatIOffer: "Software, automação e soluções digitais para empresas.",
-  whatISeek: "Empresários, parceiros e oportunidades para soluções digitais.",
+  whoIHelp: "Empresas que precisam organizar processos, vendas e atendimento.",
   tags: ["Tecnologia", "Dados", "Automação"],
   offerTags: ["Tecnologia", "Automação", "Dados"],
-  seekTags: ["Empreendedorismo", "Parcerias"],
+  targetTags: ["Empreendedorismo", "Gestão"],
   contact: {
     linkedin: "https://linkedin.com",
     instagram: "https://instagram.com",
@@ -58,10 +58,10 @@ export const profiles: Profile[] = [
     bio: "Arquiteta especializada em projetos residenciais e comerciais.",
     whatIDo: "Desenvolvo projetos arquitetônicos, interiores e acompanho obras.",
     whatIOffer: "Arquitetura, reformas e planejamento de espaços.",
-    whatISeek: "Tecnologia, marketing e parceiros para novos projetos.",
+    whoIHelp: "Pessoas e empresas que precisam projetar, reformar ou organizar espaços.",
     tags: ["Arquitetura", "Construção", "Interiores"],
     offerTags: ["Arquitetura", "Construção"],
-    seekTags: ["Tecnologia", "Marketing"],
+    targetTags: ["Construção", "Empreendedorismo"],
     contact: { whatsapp: "5571999999999", linkedin: "https://linkedin.com", instagram: "https://instagram.com" },
   },
   {
@@ -74,10 +74,10 @@ export const profiles: Profile[] = [
     bio: "Ajudo empresas a organizarem decisões, processos e crescimento.",
     whatIDo: "Atuo com estratégia, gestão e estruturação comercial.",
     whatIOffer: "Planejamento, gestão e desenvolvimento de negócios.",
-    whatISeek: "Tecnologia e automação para apoiar meus clientes.",
+    whoIHelp: "Empresas em crescimento que precisam de estratégia e organização comercial.",
     tags: ["Gestão", "Estratégia", "Negócios"],
     offerTags: ["Gestão", "Estratégia"],
-    seekTags: ["Tecnologia", "Automação"],
+    targetTags: ["Empreendedorismo", "Gestão"],
     contact: { linkedin: "https://linkedin.com" },
   },
   {
@@ -90,10 +90,10 @@ export const profiles: Profile[] = [
     bio: "Estratégia de marca e comunicação para negócios em crescimento.",
     whatIDo: "Desenho posicionamento, campanhas e conteúdo para empresas.",
     whatIOffer: "Marketing, marca e comunicação estratégica.",
-    whatISeek: "Empresas em expansão e parceiros de tecnologia.",
+    whoIHelp: "Empresas que querem fortalecer marca, campanhas e vendas.",
     tags: ["Marketing", "Marca", "Vendas"],
     offerTags: ["Marketing", "Vendas"],
-    seekTags: ["Tecnologia", "Empreendedorismo"],
+    targetTags: ["Empreendedorismo", "Vendas"],
     contact: { whatsapp: "5571988888888", instagram: "https://instagram.com" },
   },
   {
@@ -106,10 +106,10 @@ export const profiles: Profile[] = [
     bio: "Contabilidade próxima para negócios que querem crescer com segurança.",
     whatIDo: "Cuido da estrutura contábil e financeira de empresas.",
     whatIOffer: "Contabilidade, planejamento tributário e organização financeira.",
-    whatISeek: "Empreendedores e negócios em estruturação.",
+    whoIHelp: "Empreendedores e empresas que precisam organizar finanças e contabilidade.",
     tags: ["Finanças", "Gestão", "Empreendedorismo"],
     offerTags: ["Finanças", "Gestão"],
-    seekTags: ["Empreendedorismo"],
+    targetTags: ["Empreendedorismo", "Gestão"],
     contact: { whatsapp: "5571977777777", linkedin: "https://linkedin.com" },
   },
   {
@@ -122,10 +122,10 @@ export const profiles: Profile[] = [
     bio: "Advogada com foco em contratos e relações empresariais.",
     whatIDo: "Atuo preventivamente em contratos e decisões empresariais.",
     whatIOffer: "Jurídico, contratos e estruturação societária.",
-    whatISeek: "Empresas e parceiros para projetos de longo prazo.",
+    whoIHelp: "Empresas que precisam estruturar contratos e decisões societárias.",
     tags: ["Jurídico", "Contratos", "Negócios"],
     offerTags: ["Jurídico", "Contratos"],
-    seekTags: ["Tecnologia", "Parcerias"],
+    targetTags: ["Empreendedorismo", "Gestão"],
     contact: { linkedin: "https://linkedin.com" },
   },
   {
@@ -138,10 +138,10 @@ export const profiles: Profile[] = [
     bio: "Empreendedor interessado em construir negócios sustentáveis.",
     whatIDo: "Desenvolvo e acompanho negócios em fase de crescimento.",
     whatIOffer: "Parcerias, visão comercial e novos negócios.",
-    whatISeek: "Tecnologia, gestão e profissionais para projetos em expansão.",
+    whoIHelp: "Pessoas e empresas que buscam novos negócios, parceiros e crescimento comercial.",
     tags: ["Empreendedorismo", "Vendas", "Parcerias"],
     offerTags: ["Empreendedorismo", "Parcerias"],
-    seekTags: ["Tecnologia", "Gestão"],
+    targetTags: ["Empreendedorismo", "Vendas"],
     contact: { instagram: "https://instagram.com" },
   },
 ];

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const items = [
   { href: "presentes", label: "Presentes", icon: Users },
-  { href: "conexoes", label: "Conexões", icon: Handshake },
+  { href: "oportunidades", label: "Oportunidades", icon: Handshake },
   { href: "meu-perfil", label: "Meu perfil", icon: UserRound },
 ];
 

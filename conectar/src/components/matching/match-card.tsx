@@ -11,7 +11,7 @@ export function MatchCard({ eventSlug, profile, score, reason }: { eventSlug: st
           <h2 className="font-semibold text-conectar-ink">{profile.name}</h2>
           <p className="text-sm text-conectar-ink-soft">{profile.profession}</p>
           {profile.company && <p className="text-sm text-conectar-muted">{profile.company}</p>}
-          <p className="mt-1 text-sm font-semibold text-conectar-green-700">{score}% de compatibilidade</p>
+          <p className="mt-1 text-sm font-semibold text-conectar-green-700">{score}% de potencial</p>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-1.5">{profile.tags.slice(0, 3).map((tag) => <Chip key={tag}>{tag}</Chip>)}</div>

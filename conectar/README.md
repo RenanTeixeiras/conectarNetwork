@@ -27,4 +27,24 @@ npm run build
 - `src/data/mock-event.ts`: dados temporários da primeira etapa.
 - `src/lib`: utilitários de domínio e interface.
 
-Banco, autenticação, upload real e administração serão adicionados na Etapa 2 e seguintes. Não adicionar segredos ao repositório; copie `.env.example` para `.env.local` quando necessário.
+## Supabase
+
+As tabelas são definidas em `supabase/migrations/`; os dados exclusivos de apresentação estão em `supabase/seed.sql`.
+
+```bash
+npm run supabase:start
+npm run supabase:reset
+npm run supabase:types
+```
+
+Para aplicar as migrations ao projeto remoto, autentique a CLI e vincule o projeto antes de executar `npx supabase db push`:
+
+```bash
+npx supabase login
+npx supabase link --project-ref oezecmujzyzcxijqbpaf
+npx supabase db push
+```
+
+`src/lib/supabase/database.types.ts` é gerado a partir do banco local. Gere-o novamente após cada migration.
+
+Não adicionar segredos ao repositório; copie `.env.example` para `.env.local` quando necessário. A chave `SUPABASE_SECRET_KEY` é exclusiva do servidor e deve ser revogada se for exposta.
