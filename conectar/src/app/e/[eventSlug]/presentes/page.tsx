@@ -1,32 +1,15 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getGuestSession } from "@/lib/auth/guest-session";
+import { getActiveProfileById, getOpenEventBySlug } from "@/lib/guest";
+import { PresentPageContent } from "@/components/participants/present-page-content";
 
-import { useDeferredValue, useState } from "react";
-import { useParams } from "next/navigation";
-import { Search } from "lucide-react";
-import { AppHeader } from "@/components/layout/app-header";
-import { BottomNavigation } from "@/components/layout/bottom-navigation";
-import { MobileShell } from "@/components/layout/mobile-shell";
-import { ParticipantRow } from "@/components/participants/participant-row";
-import { Divider } from "@/components/ui/primitives";
-import { profiles } from "@/data/mock-event";
+export default async function PresentPage({ params }: PageProps<"/e/[eventSlug]/presentes">) {
+  const { eventSlug } = await params;
+  const [event, session] = await Promise.all([getOpenEventBySlug(eventSlug), getGuestSession()]);
+  if (!event || !session || session.eventId !== event.id) redirect(`/e/${eventSlug}/entrar`);
 
-export default function PresentPage() {
-  const { eventSlug } = useParams<{ eventSlug: string }>();
-  const [query, setQuery] = useState("");
-  const deferredQuery = useDeferredValue(query.trim().toLocaleLowerCase("pt-BR"));
-  const visibleProfiles = profiles.filter((profile) => [profile.name, profile.profession, profile.company, profile.segment].filter(Boolean).join(" ").toLocaleLowerCase("pt-BR").includes(deferredQuery));
-  return (
-    <MobileShell>
-      <AppHeader eventSlug={eventSlug} />
-      <div className="flex-1 px-5 pb-6">
-        <h1 className="font-editorial text-[30px] font-semibold leading-9 text-conectar-ink">Olá, Renan! <span className="font-sans text-xl">👋</span></h1>
-        <p className="mt-1 text-sm text-conectar-muted">{profiles.length} pessoas estão presentes no encontro.</p>
-        <label className="relative mt-6 block" htmlFor="participant-search"><Search aria-hidden="true" className="pointer-events-none absolute left-3.5 top-3.5 size-5 text-conectar-muted" /><input id="participant-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nome, profissão ou segmento..." className="h-12 w-full rounded-xl border border-conectar-border-soft bg-white pl-11 pr-3 text-base outline-none placeholder:text-sm placeholder:text-conectar-muted focus:border-conectar-green-700 focus:ring-2 focus:ring-conectar-green-100" /></label>
-        <section className="mt-5" aria-label="Participantes presentes">
-          {visibleProfiles.length ? visibleProfiles.map((profile, index) => <div key={profile.id}>{index > 0 && <Divider />}<ParticipantRow eventSlug={eventSlug} profile={profile} /></div>) : <div className="py-14 text-center"><p className="font-semibold text-conectar-ink">Nenhuma pessoa encontrada.</p><p className="mt-2 text-sm leading-5 text-conectar-muted">Tente outro nome, profissão ou segmento.</p></div>}
-        </section>
-      </div>
-      <BottomNavigation eventSlug={eventSlug} active="presentes" />
-    </MobileShell>
-  );
+  const profile = await getActiveProfileById(session.profileId);
+  if (!profile) redirect(`/e/${eventSlug}/entrar`);
+
+  return <PresentPageContent eventSlug={event.slug} firstName={profile.first_name} />;
 }

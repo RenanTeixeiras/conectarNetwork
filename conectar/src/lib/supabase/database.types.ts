@@ -332,7 +332,50 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      check_in_event_participant: {
+        Args: { p_event_id: string; p_profile_id: string };
+        Returns: {
+          checked_in_at: string | null;
+          checked_out_at: string | null;
+          created_at: string;
+          event_id: string;
+          id: string;
+          last_seen_at: string | null;
+          profile_id: string;
+          status: Database["public"]["Enums"]["participant_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "event_participants";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      create_guest_participant: {
+        Args: {
+          p_city: string;
+          p_company: string;
+          p_event_id: string;
+          p_first_name: string;
+          p_instagram_url: string;
+          p_last_name: string;
+          p_linkedin_url: string;
+          p_normalized_name: string;
+          p_offer_tag_ids: string[];
+          p_profession: string;
+          p_segment: string;
+          p_share_instagram: boolean;
+          p_share_linkedin: boolean;
+          p_share_whatsapp: boolean;
+          p_target_audience: string;
+          p_target_tag_ids: string[];
+          p_what_i_do: string;
+          p_what_i_offer: string;
+          p_whatsapp_phone: string;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       admin_role: "ADMIN";
