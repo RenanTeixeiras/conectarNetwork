@@ -2,6 +2,7 @@ export type ParticipantProfile = {
   company: string | null;
   id: string;
   name: string;
+  photoUrl: string | null;
   profession: string | null;
   segment: string | null;
 };
@@ -17,4 +18,25 @@ export type PublicProfile = ParticipantProfile & {
   targetAudience: string | null;
   whatIDo: string | null;
   whatIOffer: string | null;
+};
+
+export type EditableProfile = {
+  city: string;
+  company: string;
+  firstName: string;
+  id: string;
+  instagram: string;
+  lastName: string;
+  linkedin: string;
+  offerTagIds: string[];
+  photoUrl: string | null;
+  profession: string;
+  segment: string;
+  shareContacts: boolean;
+  tags: string[];
+  targetAudience: string;
+  targetTagIds: string[];
+  whatsapp: string;
+  whatIDo: string;
+  whatIOffer: string;
 };

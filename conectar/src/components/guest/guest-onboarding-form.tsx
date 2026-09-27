@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useActionState, useState, type Dispatch, type SetStateAction } from "react";
-import { ArrowLeft, ArrowRight, Camera } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { completeGuestOnboarding, type GuestOnboardingState } from "@/actions/guest.actions";
-import { Avatar, Button, SelectField, TextareaField, TextField } from "@/components/ui/primitives";
+import { PhotoPicker } from "@/components/profile/photo-picker";
+import { Button, SelectField, TextareaField, TextField } from "@/components/ui/primitives";
 
 type Tag = { category: string | null; id: string; name: string };
 type Values = {
@@ -55,9 +56,10 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
         <h1 className="font-editorial text-[30px] font-semibold leading-9 text-conectar-ink">{headings[step - 1]}</h1>
         <p className="mt-2 text-sm leading-5 text-conectar-muted">Estas informações serão exibidas aos participantes deste encontro.</p>
         <div className="mt-7 flex flex-1 flex-col">
-          <input type="hidden" name="eventSlug" value={eventSlug} />
-          <input type="hidden" name="firstName" value={firstName} />
-          <input type="hidden" name="lastName" value={lastName} />
+           <input type="hidden" name="eventSlug" value={eventSlug} />
+           <input type="hidden" name="firstName" value={firstName} />
+           <input type="hidden" name="lastName" value={lastName} />
+           <div className={step === 1 ? "" : "hidden"}><PhotoPicker name="photo" profileName={name} /></div>
           {step === 3 && <>
             <input type="hidden" name="profession" value={values.profession} />
             <input type="hidden" name="company" value={values.company} />
@@ -70,7 +72,6 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
           </>}
           <div className="flex-1 space-y-5">
             {step === 1 && <>
-              <div className="flex items-center gap-4"><Avatar name={name} size="lg" /><span className="flex min-h-11 items-center gap-2 text-sm font-medium text-conectar-green-800"><Camera className="size-5" />Adicionar foto <span className="font-normal text-conectar-muted">(opcional)</span></span></div>
               <TextField label="Profissão / Cargo" name="profession" value={values.profession} onChange={(event) => setValue("profession", event.target.value)} required />
               <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
               <SelectField label="Segmento" name="segment" value={values.segment} onChange={(event) => setValue("segment", event.target.value)}>{segmentTags.map((tag) => <option key={tag.id} value={tag.name}>{tag.name}</option>)}</SelectField>

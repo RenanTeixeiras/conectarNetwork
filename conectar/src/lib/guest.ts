@@ -105,6 +105,30 @@ export async function createGuestParticipant(eventId: string, input: GuestOnboar
   return data;
 }
 
+export async function updateGuestProfile(eventId: string, profileId: string, input: Omit<GuestOnboardingInput, "firstName" | "lastName" | "normalizedName">) {
+  const supabase = createServerSupabaseClient();
+  const { error } = await supabase.rpc("update_guest_profile", {
+    p_city: input.city,
+    p_company: input.company,
+    p_event_id: eventId,
+    p_instagram_url: input.instagram,
+    p_linkedin_url: input.linkedin,
+    p_offer_tag_ids: input.offerTagIds,
+    p_profile_id: profileId,
+    p_profession: input.profession,
+    p_segment: input.segment,
+    p_share_instagram: input.shareInstagram,
+    p_share_linkedin: input.shareLinkedin,
+    p_share_whatsapp: input.shareWhatsapp,
+    p_target_audience: input.targetAudience,
+    p_target_tag_ids: input.targetTagIds,
+    p_what_i_do: input.whatIDo,
+    p_what_i_offer: input.whatIOffer,
+    p_whatsapp_phone: input.whatsapp,
+  });
+  if (error) throw new Error("Não foi possível atualizar seu perfil.");
+}
+
 export async function getActiveTags() {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase

@@ -376,6 +376,28 @@ export type Database = {
         };
         Returns: string;
       };
+      update_guest_profile: {
+        Args: {
+          p_city: string;
+          p_company: string;
+          p_event_id: string;
+          p_instagram_url: string;
+          p_linkedin_url: string;
+          p_offer_tag_ids: string[];
+          p_profession: string;
+          p_profile_id: string;
+          p_segment: string;
+          p_share_instagram: boolean;
+          p_share_linkedin: boolean;
+          p_share_whatsapp: boolean;
+          p_target_audience: string;
+          p_target_tag_ids: string[];
+          p_what_i_do: string;
+          p_what_i_offer: string;
+          p_whatsapp_phone: string;
+        };
+        Returns: undefined;
+      };
     };
     Enums: {
       admin_role: "ADMIN";

@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { rankOpportunities } from "./opportunities";
 
 const candidates = [
-  { id: "1", name: "Marina Souza", profession: "Arquiteta", company: null, segment: "Arquitetura" },
-  { id: "2", name: "Ana Lima", profession: "Especialista em Marketing", company: null, segment: "Comunicação" },
-  { id: "3", name: "Carlos Mendes", profession: "Consultor", company: null, segment: "Gestão" },
+  { id: "1", name: "Marina Souza", photoUrl: null, profession: "Arquiteta", company: null, segment: "Arquitetura" },
+  { id: "2", name: "Ana Lima", photoUrl: null, profession: "Especialista em Marketing", company: null, segment: "Comunicação" },
+  { id: "3", name: "Carlos Mendes", photoUrl: null, profession: "Consultor", company: null, segment: "Gestão" },
 ];
 
 describe("rankOpportunities", () => {

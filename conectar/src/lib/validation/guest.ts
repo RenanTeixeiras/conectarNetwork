@@ -22,3 +22,5 @@ export const guestOnboardingSchema = guestNameSchema.extend({
   targetTagIds: z.array(z.uuid()).min(1, "Selecione ao menos um público-alvo.").max(20),
   shareContacts: z.boolean(),
 });
+
+export const profileUpdateSchema = guestOnboardingSchema.omit({ firstName: true, lastName: true });

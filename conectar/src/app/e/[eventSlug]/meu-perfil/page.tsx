@@ -1,18 +1,16 @@
-"use client";
+import { redirect } from "next/navigation";
+import { getGuestSession } from "@/lib/auth/guest-session";
+import { getActiveTags, getOpenEventBySlug } from "@/lib/guest";
+import { getEditableProfile } from "@/lib/participants";
+import { MyProfileContent } from "@/components/profile/my-profile-content";
 
-import { useParams } from "next/navigation";
-import { Pencil } from "lucide-react";
-import { AppHeader } from "@/components/layout/app-header";
-import { BottomNavigation } from "@/components/layout/bottom-navigation";
-import { MobileShell } from "@/components/layout/mobile-shell";
-import { ProfileView } from "@/components/profile/profile-view";
-import { Button, Toast } from "@/components/ui/primitives";
-import { currentProfile } from "@/data/mock-event";
-import { useState } from "react";
+export default async function MyProfilePage({ params }: PageProps<"/e/[eventSlug]/meu-perfil">) {
+  const { eventSlug } = await params;
+  const [event, session] = await Promise.all([getOpenEventBySlug(eventSlug), getGuestSession()]);
+  if (!event || !session || session.eventId !== event.id) redirect(`/e/${eventSlug}/entrar`);
 
-export default function MyProfilePage() {
-  const { eventSlug } = useParams<{ eventSlug: string }>();
-  const [showToast, setShowToast] = useState(false);
-  const profile = { ...currentProfile, company: currentProfile.company ?? null, profession: currentProfile.profession ?? null, segment: currentProfile.segment ?? null, targetAudience: currentProfile.whoIHelp };
-  return <MobileShell><AppHeader eventSlug={eventSlug} /><div className="flex-1 px-5 pb-6"><div className="mb-5 flex items-center justify-between"><h1 className="font-editorial text-[30px] font-semibold leading-9 text-conectar-ink">Meu perfil</h1><button type="button" aria-label="Editar perfil" onClick={() => setShowToast(true)} className="grid size-11 place-items-center rounded-lg text-conectar-green-800"><Pencil className="size-5" /></button></div><ProfileView profile={profile} isOwnProfile /><Button className="mt-8" type="button" variant="secondary" onClick={() => setShowToast(true)}><Pencil className="size-4" />Editar perfil</Button></div>{showToast && <Toast message="A edição será conectada ao banco na próxima etapa." onClose={() => setShowToast(false)} />}<BottomNavigation eventSlug={eventSlug} active="meu-perfil" /></MobileShell>;
+  const [profile, tags] = await Promise.all([getEditableProfile(event.id, session.profileId), getActiveTags()]);
+  if (!profile) redirect(`/e/${eventSlug}/entrar`);
+
+  return <MyProfileContent eventSlug={event.slug} profile={profile} tags={tags} />;
 }

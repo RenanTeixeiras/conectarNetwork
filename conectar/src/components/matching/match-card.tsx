@@ -6,7 +6,7 @@ export function MatchCard({ eventSlug, profile, label, reason }: { eventSlug: st
   return (
     <article className="rounded-2xl border bg-white p-4">
       <div className="flex items-start gap-3">
-        <Avatar name={profile.name} />
+         <Avatar name={profile.name} photoUrl={profile.photoUrl} />
         <div className="min-w-0 flex-1">
           <h2 className="font-semibold text-conectar-ink">{profile.name}</h2>
            {profile.profession && <p className="text-sm text-conectar-ink-soft">{profile.profession}</p>}

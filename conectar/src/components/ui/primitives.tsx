@@ -78,9 +78,13 @@ export function Chip({ children, selected = false, onClick }: { children: ReactN
   return onClick ? <button type="button" onClick={onClick}>{content}</button> : content;
 }
 
-export function Avatar({ name, size = "md", className }: { name: string; size?: "sm" | "md" | "lg" | "xl"; className?: string }) {
+export function Avatar({ name, photoUrl, size = "md", className }: { name: string; photoUrl?: string | null; size?: "sm" | "md" | "lg" | "xl"; className?: string }) {
   const sizes = { sm: "size-9 text-xs", md: "size-12 text-sm", lg: "size-[72px] text-xl", xl: "size-24 text-2xl" };
-  return <div aria-label={`Foto de ${name}`} className={cn("grid shrink-0 place-items-center rounded-full bg-conectar-green-100 font-semibold text-conectar-green-800", sizes[size], className)}>{initials(name)}</div>;
+  return <div aria-label={`Foto de ${name}`} className={cn("grid shrink-0 place-items-center overflow-hidden rounded-full bg-conectar-green-100 font-semibold text-conectar-green-800", sizes[size], className)}>{photoUrl ? <>
+    {/* Signed URLs intentionally bypass remote image optimization. */}
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img src={photoUrl} alt="" className="size-full object-cover" />
+  </> : initials(name)}</div>;
 }
 
 export function Divider({ className }: { className?: string }) {
