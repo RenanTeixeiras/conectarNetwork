@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { Pencil } from "lucide-react";
 import { removeMyProfilePhoto, updateMyProfile, uploadMyProfilePhoto, type ProfilePhotoState, type ProfileUpdateState } from "@/actions/guest.actions";
 import { AppHeader } from "@/components/layout/app-header";
@@ -25,6 +25,7 @@ export function MyProfileContent({ eventSlug, profile, tags }: { eventSlug: stri
   const [editing, setEditing] = useState(false);
   const [state, formAction, isPending] = useActionState(updateMyProfile, initialState);
   const [photoState, photoFormAction, isPhotoPending] = useActionState(uploadMyProfilePhoto, initialPhotoState);
+  const photoFormRef = useRef<HTMLFormElement>(null);
   const segmentTags = tags.filter((tag) => tag.category === "segmento");
   const offerTags = tags.filter((tag) => tag.category !== "interesse");
   const [offerTagIds, setOfferTagIds] = useState(profile.offerTagIds.filter((tagId) => offerTags.some((tag) => tag.id === tagId)));
@@ -64,7 +65,7 @@ export function MyProfileContent({ eventSlug, profile, tags }: { eventSlug: stri
       <AppHeader eventSlug={eventSlug} />
       <div className="flex-1 px-5 pb-6">
         <div className="mb-5 flex items-center justify-between"><h1 className="font-editorial text-[30px] font-semibold leading-9 text-conectar-ink">Meu perfil</h1>{!editing && <button type="button" aria-label="Editar perfil" onClick={() => setEditing(true)} className="grid size-11 place-items-center rounded-lg text-conectar-green-800"><Pencil className="size-5" /></button>}</div>
-        {!editing && <><ProfileView profile={preview} isOwnProfile /><section className="mt-8 rounded-xl border border-conectar-border-soft bg-white p-4"><h2 className="text-sm font-semibold text-conectar-ink">Foto de perfil</h2><form action={photoFormAction} className="mt-4 space-y-4"><input type="hidden" name="eventSlug" value={eventSlug} /><PhotoPicker name="photo" profileName={preview.name} photoUrl={profile.photoUrl} />{photoState.error && <p role="alert" className="text-sm text-[#b94a48]">{photoState.error}</p>}<Button type="submit" disabled={isPhotoPending}>Salvar foto</Button></form>{profile.photoUrl && <form action={removeMyProfilePhoto} className="mt-3"><input type="hidden" name="eventSlug" value={eventSlug} /><Button type="submit" variant="ghost">Remover foto</Button></form>}</section><Button className="mt-5" type="button" variant="secondary" onClick={() => setEditing(true)}><Pencil className="size-4" />Editar perfil</Button></>}
+        {!editing && <><ProfileView profile={preview} isOwnProfile /><section className="mt-8 rounded-xl border border-conectar-border-soft bg-white p-4"><h2 className="text-sm font-semibold text-conectar-ink">Foto de perfil</h2><form ref={photoFormRef} action={photoFormAction} className="mt-4 space-y-4"><input type="hidden" name="eventSlug" value={eventSlug} /><PhotoPicker isUploading={isPhotoPending} name="photo" onPhotoReady={() => photoFormRef.current?.requestSubmit()} profileName={preview.name} photoUrl={profile.photoUrl} />{photoState.error && <p role="alert" className="text-sm text-[#b94a48]">{photoState.error}</p>}</form>{profile.photoUrl && <form action={removeMyProfilePhoto} className="mt-3"><input type="hidden" name="eventSlug" value={eventSlug} /><Button type="submit" variant="ghost">Remover foto</Button></form>}</section><Button className="mt-5" type="button" variant="secondary" onClick={() => setEditing(true)}><Pencil className="size-4" />Editar perfil</Button></>}
         {editing && <form action={formAction} className="space-y-5">
           <input type="hidden" name="eventSlug" value={eventSlug} />
           {offerTagIds.map((tagId) => <input key={`offer-${tagId}`} type="hidden" name="offerTagIds" value={tagId} />)}
