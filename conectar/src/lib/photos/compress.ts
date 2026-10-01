@@ -10,14 +10,46 @@ export type ProfilePhotoCrop = {
   zoom: number;
 };
 
+type DecodedImage = {
+  height: number;
+  release: () => void;
+  source: CanvasImageSource;
+  width: number;
+};
+
 function toBlob(canvas: HTMLCanvasElement, quality: number) {
   return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+}
+
+async function decodeWithImageElement(file: File): Promise<DecodedImage> {
+  const url = URL.createObjectURL(file);
+  const image = new Image();
+  try {
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error("Não foi possível decodificar a foto. Escolha uma imagem JPEG, PNG ou WebP diferente."));
+      image.src = url;
+    });
+    return { height: image.naturalHeight, release: () => URL.revokeObjectURL(url), source: image, width: image.naturalWidth };
+  } catch (error) {
+    URL.revokeObjectURL(url);
+    throw error;
+  }
+}
+
+async function decodeProfilePhoto(file: File): Promise<DecodedImage> {
+  try {
+    const image = await createImageBitmap(file);
+    return { height: image.height, release: () => image.close(), source: image, width: image.width };
+  } catch {
+    return decodeWithImageElement(file);
+  }
 }
 
 export async function cropAndCompressProfilePhoto(file: File, crop: ProfilePhotoCrop) {
   if (!ACCEPTED_TYPES.includes(file.type)) throw new Error("Escolha uma foto JPEG, PNG ou WebP.");
 
-  const source = await createImageBitmap(file);
+  const source = await decodeProfilePhoto(file);
   try {
     let size = 512;
     while (size >= 128) {
@@ -32,7 +64,7 @@ export async function cropAndCompressProfilePhoto(file: File, crop: ProfilePhoto
       const height = source.height * scale;
       const x = (size - width) / 2 + crop.offsetX * size;
       const y = (size - height) / 2 + crop.offsetY * size;
-      context.drawImage(source, x, y, width, height);
+      context.drawImage(source.source, x, y, width, height);
 
       for (const quality of [0.86, 0.76, 0.66, 0.56, 0.46]) {
         const blob = await toBlob(canvas, quality);
@@ -43,7 +75,7 @@ export async function cropAndCompressProfilePhoto(file: File, crop: ProfilePhoto
       size = Math.floor(size * 0.75);
     }
   } finally {
-    source.close();
+    source.release();
   }
 
   throw new Error("Não foi possível comprimir a foto para 300 KB. Escolha outra imagem.");
