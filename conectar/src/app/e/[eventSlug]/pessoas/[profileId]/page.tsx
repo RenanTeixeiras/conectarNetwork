@@ -11,6 +11,7 @@ export default async function PersonPage({ params }: PageProps<"/e/[eventSlug]/p
   const { eventSlug, profileId } = await params;
   const [event, session] = await Promise.all([getOpenEventBySlug(eventSlug), getGuestSession()]);
   if (!event || !session || session.eventId !== event.id) redirect(`/e/${eventSlug}/entrar`);
+  if (!event.networking_released) redirect(`/e/${event.slug}/aguarde`);
 
   const profile = await getCheckedInPublicProfile(event.id, profileId);
   if (!profile) notFound();

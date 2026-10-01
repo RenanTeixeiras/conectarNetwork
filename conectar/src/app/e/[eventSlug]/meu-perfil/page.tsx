@@ -12,5 +12,5 @@ export default async function MyProfilePage({ params }: PageProps<"/e/[eventSlug
   const [profile, tags] = await Promise.all([getEditableProfile(event.id, session.profileId), getActiveTags()]);
   if (!profile) redirect(`/e/${eventSlug}/entrar`);
 
-  return <MyProfileContent eventSlug={event.slug} profile={profile} tags={tags} />;
+  return <MyProfileContent eventSlug={event.slug} networkingReleased={event.networking_released} profile={profile} tags={tags} />;
 }

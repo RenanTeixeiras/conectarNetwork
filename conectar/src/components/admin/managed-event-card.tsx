@@ -1,0 +1,12 @@
+import { LockKeyhole, UnlockKeyhole, UsersRound } from "lucide-react";
+import { NetworkingReleaseForm } from "@/components/admin/networking-release-form";
+import type { ManagedEvent } from "@/lib/admin";
+
+function dateLabel(startsAt: string | null) {
+  return startsAt ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(new Date(startsAt)) : "Data a definir";
+}
+
+export function ManagedEventCard({ event }: { event: ManagedEvent }) {
+  const Icon = event.networkingReleased ? UnlockKeyhole : LockKeyhole;
+  return <section className="rounded-2xl border border-conectar-border-soft bg-white p-5 shadow-[0_8px_20px_rgba(20,45,30,0.05)]"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-conectar-muted">{dateLabel(event.startsAt)}</p><h2 className="mt-2 font-editorial text-2xl font-semibold text-conectar-ink">{event.name}</h2>{event.venueName && <p className="mt-1 text-sm text-conectar-muted">{event.venueName}</p>}</div><span className={`grid size-11 shrink-0 place-items-center rounded-xl ${event.networkingReleased ? "bg-conectar-green-100 text-conectar-green-800" : "bg-conectar-warm-canvas text-conectar-ink-soft"}`}><Icon aria-hidden="true" className="size-5" /></span></div><div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl bg-conectar-green-50 p-3"><UsersRound aria-hidden="true" className="size-4 text-conectar-green-700" /><p className="mt-2 text-xl font-semibold text-conectar-ink">{event.registeredCount}</p><p className="text-xs text-conectar-muted">inscritos</p></div><div className="rounded-xl bg-conectar-green-50 p-3"><UsersRound aria-hidden="true" className="size-4 text-conectar-green-700" /><p className="mt-2 text-xl font-semibold text-conectar-ink">{event.checkedInCount}</p><p className="text-xs text-conectar-muted">presentes</p></div></div><div className={`mt-5 rounded-xl px-3.5 py-3 text-sm ${event.networkingReleased ? "bg-conectar-green-50 text-conectar-green-800" : "bg-conectar-warm-canvas text-conectar-ink-soft"}`}><span className="font-semibold">{event.networkingReleased ? "Networking liberado" : "Lista bloqueada"}</span><p className="mt-0.5 leading-5">{event.networkingReleased ? "Participantes podem acessar presentes e oportunidades." : "Participantes aguardam a autorização para acessar a rede."}</p></div><NetworkingReleaseForm eventId={event.id} released={event.networkingReleased} /></section>;
+}

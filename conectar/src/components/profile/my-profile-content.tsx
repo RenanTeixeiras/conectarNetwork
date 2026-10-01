@@ -21,7 +21,7 @@ function TagCheckbox({ tag, selected, onChange }: { tag: Tag; selected: boolean;
   return <label className="cursor-pointer"><input className="peer sr-only" type="checkbox" checked={selected} onChange={onChange} /><span className="inline-flex min-h-7 items-center rounded-full bg-conectar-green-50 px-2.5 py-1 text-xs font-medium text-conectar-green-800 peer-checked:bg-conectar-green-800 peer-checked:text-white">{tag.name}</span></label>;
 }
 
-export function MyProfileContent({ eventSlug, profile, tags }: { eventSlug: string; profile: EditableProfile; tags: Tag[] }) {
+export function MyProfileContent({ eventSlug, networkingReleased, profile, tags }: { eventSlug: string; networkingReleased: boolean; profile: EditableProfile; tags: Tag[] }) {
   const [editing, setEditing] = useState(false);
   const [state, formAction, isPending] = useActionState(updateMyProfile, initialState);
   const [photoState, photoFormAction, isPhotoPending] = useActionState(uploadMyProfilePhoto, initialPhotoState);
@@ -87,7 +87,7 @@ export function MyProfileContent({ eventSlug, profile, tags }: { eventSlug: stri
           <div className="flex gap-3"><Button type="button" variant="secondary" onClick={() => setEditing(false)}>Cancelar</Button><Button type="submit" disabled={isPending}>Salvar alterações</Button></div>
         </form>}
       </div>
-      <BottomNavigation eventSlug={eventSlug} active="meu-perfil" />
+      <BottomNavigation eventSlug={eventSlug} active="meu-perfil" networkingReleased={networkingReleased} />
     </MobileShell>
   );
 }

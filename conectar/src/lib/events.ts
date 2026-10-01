@@ -5,7 +5,7 @@ export async function getEventBySlug(slug: string) {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("events")
-    .select("id, name, slug, description, starts_at, ends_at, timezone, status, venue_name")
+    .select("id, name, slug, description, starts_at, ends_at, timezone, status, venue_name, networking_released")
     .eq("slug", slug)
     .maybeSingle();
 

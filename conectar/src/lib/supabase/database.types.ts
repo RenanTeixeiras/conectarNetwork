@@ -158,6 +158,7 @@ export type Database = {
           ends_at: string | null;
           id: string;
           name: string;
+          networking_released: boolean;
           slug: string;
           starts_at: string | null;
           status: Database["public"]["Enums"]["event_status"];
@@ -172,6 +173,7 @@ export type Database = {
           ends_at?: string | null;
           id?: string;
           name: string;
+          networking_released?: boolean;
           slug: string;
           starts_at?: string | null;
           status?: Database["public"]["Enums"]["event_status"];
@@ -186,6 +188,7 @@ export type Database = {
           ends_at?: string | null;
           id?: string;
           name?: string;
+          networking_released?: boolean;
           slug?: string;
           starts_at?: string | null;
           status?: Database["public"]["Enums"]["event_status"];

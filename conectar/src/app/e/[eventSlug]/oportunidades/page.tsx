@@ -11,6 +11,7 @@ export default async function OpportunitiesPage({ params }: PageProps<"/e/[event
   const { eventSlug } = await params;
   const [event, session] = await Promise.all([getOpenEventBySlug(eventSlug), getGuestSession()]);
   if (!event || !session || session.eventId !== event.id) redirect(`/e/${eventSlug}/entrar`);
+  if (!event.networking_released) redirect(`/e/${event.slug}/aguarde`);
 
   const { hasTargetSegments, opportunities } = await getOpportunities(event.id, session.profileId);
   return (

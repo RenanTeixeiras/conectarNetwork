@@ -47,7 +47,7 @@ export async function identifyGuest(_: GuestEntryState, formData: FormData): Pro
   if (!profileId) return { error: "Não foi possível identificar seu perfil." };
   await checkInExistingGuest(event.id, profileId);
   await createGuestSession(event.id, profileId);
-  redirect(`/e/${event.slug}/presentes`);
+  redirect(`/e/${event.slug}/${event.networking_released ? "presentes" : "aguarde"}`);
 }
 
 export async function selectExistingGuest(formData: FormData) {
@@ -78,7 +78,7 @@ export async function selectExistingGuest(formData: FormData) {
   }
 
   await createGuestSession(event.id, profileId);
-  redirect(`/e/${event.slug}/presentes${photoFailed ? "?foto=erro" : ""}`);
+  redirect(`/e/${event.slug}/${event.networking_released ? "presentes" : "aguarde"}${photoFailed ? "?foto=erro" : ""}`);
 }
 
 export async function completeGuestOnboarding(_: GuestOnboardingState, formData: FormData): Promise<GuestOnboardingState> {
@@ -124,7 +124,7 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
   }
 
   await createGuestSession(event.id, profileId);
-  redirect(`/e/${event.slug}/presentes`);
+  redirect(`/e/${event.slug}/${event.networking_released ? "presentes" : "aguarde"}`);
 }
 
 export async function updateMyProfile(_: ProfileUpdateState, formData: FormData): Promise<ProfileUpdateState> {

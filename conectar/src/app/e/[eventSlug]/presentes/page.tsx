@@ -8,6 +8,7 @@ export default async function PresentPage({ params }: PageProps<"/e/[eventSlug]/
   const { eventSlug } = await params;
   const [event, session] = await Promise.all([getOpenEventBySlug(eventSlug), getGuestSession()]);
   if (!event || !session || session.eventId !== event.id) redirect(`/e/${eventSlug}/entrar`);
+  if (!event.networking_released) redirect(`/e/${event.slug}/aguarde`);
 
   const [profile, participants] = await Promise.all([getActiveProfileById(session.profileId), getCheckedInParticipants(event.id)]);
   if (!profile) redirect(`/e/${eventSlug}/entrar`);

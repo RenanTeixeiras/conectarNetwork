@@ -48,3 +48,12 @@ npx supabase db push
 `src/lib/supabase/database.types.ts` é gerado a partir do banco local. Gere-o novamente após cada migration.
 
 Não adicionar segredos ao repositório; copie `.env.example` para `.env.local` quando necessário. A chave `SUPABASE_SECRET_KEY` é exclusiva do servidor e deve ser revogada se for exposta.
+# Administração
+
+Para habilitar a área `/gerencial`, defina `ADMIN_RENAN_PASSWORD` e `ADMIN_DANI_PASSWORD` (senhas com ao menos 7 caracteres). A sessão administrativa usa `ADMIN_SESSION_SECRET` quando definido, ou o `GUEST_SESSION_SECRET` existente. Depois de aplicar as migrations ao projeto Supabase, provisione as contas:
+
+```bash
+npm run admin:provision
+```
+
+O comando cria ou atualiza os usuários `renan` e `dani` no Supabase Auth, sem gravar senhas no repositório.
