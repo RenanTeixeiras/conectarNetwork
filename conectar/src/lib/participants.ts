@@ -3,6 +3,7 @@ import type { EditableProfile, ParticipantProfile, PublicProfile } from "@/types
 import { rankOpportunities } from "@/lib/matching/opportunities";
 import { getSignedProfilePhotoUrls } from "@/lib/profile-photo";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createConnectionMessage } from "@/lib/whatsapp-message";
 
 function displayName(firstName: string, lastName: string) {
   return `${firstName} ${lastName}`;
@@ -56,7 +57,7 @@ export async function getCheckedInParticipants(eventId: string): Promise<Partici
   }));
 }
 
-export async function getCheckedInPublicProfile(eventId: string, profileId: string, contactMessage: string): Promise<PublicProfile | null> {
+export async function getCheckedInPublicProfile(eventId: string, profileId: string, contactContext: { eventName: string; senderCompany: string | null; senderName: string }): Promise<PublicProfile | null> {
   const supabase = createServerSupabaseClient();
   const { data: participation, error: participationError } = await supabase
     .from("event_participants")
@@ -77,7 +78,7 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
   if (!profile) return null;
 
   const contact = {
-    ...(preferences?.share_whatsapp ? { whatsapp: safeWhatsApp(profile.whatsapp_phone, contactMessage) } : {}),
+    ...(preferences?.share_whatsapp ? { whatsapp: safeWhatsApp(profile.whatsapp_phone, createConnectionMessage({ ...contactContext, recipientFirstName: profile.first_name, recipientIdealAudience: profile.ideal_audience })) } : {}),
     ...(preferences?.share_linkedin ? { linkedin: safeHttpUrl(profile.linkedin_url) } : {}),
     ...(preferences?.share_instagram ? { instagram: safeHttpUrl(profile.instagram_url) } : {}),
   };

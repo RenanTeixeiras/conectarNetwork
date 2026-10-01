@@ -58,7 +58,7 @@ export async function getActiveProfileById(profileId: string) {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, first_name, what_i_do_and_offer")
+    .select("id, first_name, last_name, company")
     .eq("id", profileId)
     .eq("is_active", true)
     .maybeSingle();
