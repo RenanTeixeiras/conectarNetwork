@@ -1,6 +1,6 @@
 "use client";
 
-import { MAX_PROFILE_PHOTO_BYTES } from "@/lib/photos/validation";
+import { MAX_PROFILE_PHOTO_BYTES } from "./validation";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
@@ -46,11 +46,14 @@ async function decodeProfilePhoto(file: File): Promise<DecodedImage> {
   }
 }
 
-export async function cropAndCompressProfilePhoto(file: File, crop: ProfilePhotoCrop) {
+export async function cropAndCompressProfilePhoto(file: File, crop: ProfilePhotoCrop, preview?: HTMLImageElement) {
   if (!ACCEPTED_TYPES.includes(file.type)) throw new Error("Escolha uma foto JPEG, PNG ou WebP.");
 
-  const source = await decodeProfilePhoto(file);
+  const source: DecodedImage = preview
+    ? { height: preview.naturalHeight, width: preview.naturalWidth, source: preview, release: () => {} }
+    : await decodeProfilePhoto(file);
   try {
+    if (!source.width || !source.height) throw new Error("Aguarde a foto carregar antes de confirmar.");
     let size = 512;
     while (size >= 128) {
       const canvas = document.createElement("canvas");
