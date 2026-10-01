@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Handshake, UserRound, Users } from "lucide-react";
+import { UserRound, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
   { href: "presentes", label: "Presentes", icon: Users },
-  { href: "oportunidades", label: "Oportunidades", icon: Handshake },
   { href: "meu-perfil", label: "Meu perfil", icon: UserRound },
 ];
 
@@ -16,7 +15,7 @@ export function BottomNavigation({ eventSlug, active, networkingReleased = true 
       <div className="flex justify-around">
         {items.map(({ href, label, icon: Icon }) => {
           const isActive = active === href;
-          const isLocked = !networkingReleased && (href === "presentes" || href === "oportunidades");
+          const isLocked = !networkingReleased && href === "presentes";
           const className = cn("flex min-h-14 min-w-20 flex-col items-center justify-center gap-1 rounded-lg px-3 text-[11px] transition-colors", isActive ? "font-semibold text-conectar-green-800" : "text-conectar-muted", isLocked && "cursor-not-allowed opacity-45");
           if (isLocked) return <span key={href} aria-disabled="true" className={className}><Icon aria-hidden="true" className="size-5" strokeWidth={1.75} /><span>{label}</span></span>;
           return (

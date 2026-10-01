@@ -15,7 +15,8 @@
     "supabase:types": "npx supabase gen types typescript --local > src/lib/supabase/database.types.ts",
     "supabase:push": "npx supabase db push",
     "admin:provision": "node --env-file=.env.local scripts/provision-admins.mjs",
-    "reset:profile-photos": "node --env-file=.env.local scripts/reset-profile-photos.mjs"
+    "reset:profile-photos": "node --env-file=.env.local scripts/reset-profile-photos.mjs",
+    "reset:participants": "node --env-file=.env.local scripts/reset-participants.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",

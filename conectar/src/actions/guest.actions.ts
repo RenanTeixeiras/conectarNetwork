@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createGuestSession, getGuestSession } from "@/lib/auth/guest-session";
-import { checkInExistingGuest, createGuestParticipant, findActiveProfilesByNormalizedName, getActiveTags, getOpenEventBySlug, updateGuestProfile, type GuestCandidate } from "@/lib/guest";
+import { checkInExistingGuest, createGuestParticipant, findActiveProfilesByNormalizedName, getOpenEventBySlug, updateGuestProfile, type GuestCandidate } from "@/lib/guest";
 import { normalizeName } from "@/lib/normalization/name";
 import { removeProfilePhoto, saveProfilePhoto } from "@/lib/profile-photo";
 import { guestNameSchema, guestOnboardingSchema, profileUpdateSchema } from "@/lib/validation/guest";
@@ -92,7 +92,6 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
     profession: present(formData.get("profession")),
     segment: present(formData.get("segment")),
     shareContacts: formData.get("shareContacts") === "on",
-    targetTagIds: formData.getAll("targetTagIds"),
     whatsapp: present(formData.get("whatsapp")),
     whatIDoAndOffer: present(formData.get("whatIDoAndOffer")),
   });
@@ -103,10 +102,6 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
   if (!event) return { error: "Este encontro não está disponível." };
 
   const input = parsed.data;
-  const activeTags = await getActiveTags();
-  if (!input.targetTagIds.every((tagId) => activeTags.some((tag) => tag.id === tagId && tag.category === "segmento"))) {
-    return { error: "Selecione segmentos válidos dos clientes que você atende." };
-  }
   let profileId: string;
   try {
     profileId = await createGuestParticipant(event.id, {
@@ -138,18 +133,12 @@ export async function updateMyProfile(_: ProfileUpdateState, formData: FormData)
     profession: present(formData.get("profession")),
     segment: present(formData.get("segment")),
     shareContacts: formData.get("shareContacts") === "on",
-    targetTagIds: formData.getAll("targetTagIds"),
     whatsapp: present(formData.get("whatsapp")),
     whatIDoAndOffer: present(formData.get("whatIDoAndOffer")),
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
   const input = parsed.data;
-  const activeTags = await getActiveTags();
-  if (!input.targetTagIds.every((tagId) => activeTags.some((tag) => tag.id === tagId && tag.category === "segmento"))) {
-    return { error: "Selecione segmentos válidos dos clientes que você atende." };
-  }
-
   try {
     await updateGuestProfile(event.id, session.profileId, {
       ...input,

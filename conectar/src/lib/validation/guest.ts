@@ -16,7 +16,6 @@ export const guestOnboardingSchema = guestNameSchema.extend({
   whatsapp: z.string().trim().max(32).optional().default(""),
   linkedin: optionalText,
   instagram: optionalText,
-  targetTagIds: z.array(z.uuid()).min(1, "Selecione ao menos um segmento que você atende.").max(20),
   shareContacts: z.boolean(),
 });
 

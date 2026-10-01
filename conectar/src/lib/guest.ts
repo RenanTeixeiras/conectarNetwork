@@ -23,7 +23,6 @@ export type GuestOnboardingInput = {
   shareInstagram: boolean;
   shareLinkedin: boolean;
   shareWhatsapp: boolean;
-  targetTagIds: string[];
   whatsapp: string;
   whatIDoAndOffer: string;
 };
@@ -57,7 +56,7 @@ export async function getActiveProfileById(profileId: string) {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, first_name")
+    .select("id, first_name, what_i_do_and_offer")
     .eq("id", profileId)
     .eq("is_active", true)
     .maybeSingle();
@@ -92,7 +91,7 @@ export async function createGuestParticipant(eventId: string, input: GuestOnboar
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_tag_ids: input.targetTagIds,
+    p_target_tag_ids: [],
     p_what_i_do_and_offer: input.whatIDoAndOffer,
     p_whatsapp_phone: input.whatsapp,
   });
@@ -115,7 +114,7 @@ export async function updateGuestProfile(eventId: string, profileId: string, inp
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_tag_ids: input.targetTagIds,
+    p_target_tag_ids: [],
     p_what_i_do_and_offer: input.whatIDoAndOffer,
     p_whatsapp_phone: input.whatsapp,
   });

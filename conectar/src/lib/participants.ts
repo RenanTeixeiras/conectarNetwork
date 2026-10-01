@@ -1,6 +1,5 @@
 import "server-only";
 import type { EditableProfile, ParticipantProfile, PublicProfile } from "@/types/profiles";
-import { rankOpportunities } from "@/lib/matching/opportunities";
 import { getSignedProfilePhotoUrls } from "@/lib/profile-photo";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
@@ -18,9 +17,9 @@ function safeHttpUrl(value: string | null) {
   }
 }
 
-function safeWhatsApp(value: string | null) {
+function safeWhatsApp(value: string | null, message: string) {
   const phone = value?.replace(/\D/g, "");
-  return phone ? `https://wa.me/${phone}` : undefined;
+  return phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : undefined;
 }
 
 export async function getCheckedInParticipants(eventId: string): Promise<ParticipantProfile[]> {
@@ -55,7 +54,7 @@ export async function getCheckedInParticipants(eventId: string): Promise<Partici
   }));
 }
 
-export async function getCheckedInPublicProfile(eventId: string, profileId: string): Promise<PublicProfile | null> {
+export async function getCheckedInPublicProfile(eventId: string, profileId: string, contactMessage: string): Promise<PublicProfile | null> {
   const supabase = createServerSupabaseClient();
   const { data: participation, error: participationError } = await supabase
     .from("event_participants")
@@ -67,16 +66,15 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
   if (participationError) throw new Error("Não foi possível carregar o perfil.");
   if (!participation) return null;
 
-  const [{ data: profile, error: profileError }, { data: profileTags, error: tagsError }, { data: preferences, error: preferencesError }] = await Promise.all([
+  const [{ data: profile, error: profileError }, { data: preferences, error: preferencesError }] = await Promise.all([
     supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do_and_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
-    supabase.from("profile_tags").select("tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
-  if (profileError || tagsError || preferencesError) throw new Error("Não foi possível carregar o perfil.");
+  if (profileError || preferencesError) throw new Error("Não foi possível carregar o perfil.");
   if (!profile) return null;
 
   const contact = {
-    ...(preferences?.share_whatsapp ? { whatsapp: safeWhatsApp(profile.whatsapp_phone) } : {}),
+    ...(preferences?.share_whatsapp ? { whatsapp: safeWhatsApp(profile.whatsapp_phone, contactMessage) } : {}),
     ...(preferences?.share_linkedin ? { linkedin: safeHttpUrl(profile.linkedin_url) } : {}),
     ...(preferences?.share_instagram ? { instagram: safeHttpUrl(profile.instagram_url) } : {}),
   };
@@ -91,7 +89,6 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
     photoUrl: profile.photo_url ? photoUrls.get(profile.photo_url) ?? null : null,
     profession: profile.profession,
     segment: profile.segment,
-    tags: profileTags.map((assignment) => assignment.tags.name),
     whatIDoAndOffer: profile.what_i_do_and_offer,
   };
 }
@@ -107,12 +104,11 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
   if (participationError) throw new Error("Não foi possível carregar seu perfil.");
   if (!participation) return null;
 
-  const [{ data: profile, error: profileError }, { data: assignments, error: assignmentsError }, { data: preferences, error: preferencesError }] = await Promise.all([
+  const [{ data: profile, error: profileError }, { data: preferences, error: preferencesError }] = await Promise.all([
     supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do_and_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
-    supabase.from("profile_tags").select("tag_id, type, tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
-  if (profileError || assignmentsError || preferencesError) throw new Error("Não foi possível carregar seu perfil.");
+  if (profileError || preferencesError) throw new Error("Não foi possível carregar seu perfil.");
   if (!profile) return null;
 
   const photoUrls = await getSignedProfilePhotoUrls([profile.photo_url]);
@@ -128,27 +124,7 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
     profession: profile.profession ?? "",
     segment: profile.segment ?? "",
     shareContacts: Boolean(preferences?.share_whatsapp || preferences?.share_linkedin || preferences?.share_instagram),
-    tags: assignments.map((assignment) => assignment.tags.name),
-    targetTagIds: assignments.filter((assignment) => assignment.type === "TARGET").map((assignment) => assignment.tag_id),
     whatsapp: profile.whatsapp_phone ?? "",
     whatIDoAndOffer: profile.what_i_do_and_offer,
-  };
-}
-
-export async function getOpportunities(eventId: string, profileId: string) {
-  const supabase = createServerSupabaseClient();
-  const [{ data: targetTags, error: targetTagsError }, participants] = await Promise.all([
-    supabase.from("profile_tags").select("tags!inner(name, category)").eq("profile_id", profileId).eq("type", "TARGET"),
-    getCheckedInParticipants(eventId),
-  ]);
-  if (targetTagsError) throw new Error("Não foi possível carregar suas oportunidades.");
-
-  const targetSegments = targetTags
-    .filter((assignment) => assignment.tags.category === "segmento")
-    .map((assignment) => assignment.tags.name);
-  const candidates = participants.filter((participant) => participant.id !== profileId);
-  return {
-    hasTargetSegments: targetSegments.length > 0,
-    opportunities: rankOpportunities(targetSegments, candidates),
   };
 }

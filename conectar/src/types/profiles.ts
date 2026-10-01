@@ -14,7 +14,6 @@ export type PublicProfile = ParticipantProfile & {
     linkedin?: string;
     whatsapp?: string;
   };
-  tags: string[];
   whatIDoAndOffer: string | null;
 };
 
@@ -30,8 +29,6 @@ export type EditableProfile = {
   profession: string;
   segment: string;
   shareContacts: boolean;
-  tags: string[];
-  targetTagIds: string[];
   whatsapp: string;
   whatIDoAndOffer: string;
 };
