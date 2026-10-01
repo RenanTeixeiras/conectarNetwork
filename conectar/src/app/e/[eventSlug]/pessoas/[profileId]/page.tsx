@@ -17,7 +17,8 @@ export default async function PersonPage({ params }: PageProps<"/e/[eventSlug]/p
   if (!contactProfile) redirect(`/e/${eventSlug}/entrar`);
 
   const profile = await getCheckedInPublicProfile(event.id, profileId, {
-    eventName: event.venue_name ? `Conectar ${event.venue_name}` : event.name,
+    eventName: event.name,
+    venueName: event.venue_name,
     senderCompany: contactProfile.company,
     senderName: `${contactProfile.first_name} ${contactProfile.last_name}`,
   });

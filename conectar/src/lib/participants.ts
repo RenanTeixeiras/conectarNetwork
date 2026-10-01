@@ -57,7 +57,7 @@ export async function getCheckedInParticipants(eventId: string): Promise<Partici
   }));
 }
 
-export async function getCheckedInPublicProfile(eventId: string, profileId: string, contactContext: { eventName: string; senderCompany: string | null; senderName: string }): Promise<PublicProfile | null> {
+export async function getCheckedInPublicProfile(eventId: string, profileId: string, contactContext: { eventName: string; venueName?: string | null; senderCompany: string | null; senderName: string }): Promise<PublicProfile | null> {
   const supabase = createServerSupabaseClient();
   const { data: participation, error: participationError } = await supabase
     .from("event_participants")
