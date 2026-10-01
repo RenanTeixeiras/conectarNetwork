@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeInstagram } from "../normalization/instagram";
 
 const optionalText = z.string().trim().max(500).optional().default("");
 
@@ -16,7 +17,14 @@ export const guestOnboardingSchema = guestNameSchema.extend({
   whatIDoAndOffer: z.string().trim().min(1, "Descreva o que você faz e oferece.").max(500),
   whatsapp: z.string().trim().max(32).optional().default(""),
   linkedin: optionalText,
-  instagram: optionalText,
+  instagram: optionalText.transform((value, context) => {
+    const handle = normalizeInstagram(value);
+    if (handle === null) {
+      context.addIssue({ code: "custom", message: "Informe um Instagram válido: @usuario (letras, números, pontos ou underscores, até 30 caracteres)." });
+      return z.NEVER;
+    }
+    return handle;
+  }),
   targetTagIds: z.array(z.uuid()).max(20),
   shareContacts: z.boolean(),
 });

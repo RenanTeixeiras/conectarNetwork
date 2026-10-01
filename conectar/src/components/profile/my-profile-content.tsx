@@ -10,6 +10,7 @@ import { ProfileView } from "@/components/profile/profile-view";
 import { PhotoPicker } from "@/components/profile/photo-picker";
 import { Button, TextareaField, TextField } from "@/components/ui/primitives";
 import type { EditableProfile } from "@/types/profiles";
+import { normalizeInstagram } from "@/lib/normalization/instagram";
 
 type Values = Pick<EditableProfile, "city" | "company" | "idealAudience" | "instagram" | "linkedin" | "profession" | "segment" | "shareContacts" | "whatsapp" | "whatIDoAndOffer">;
 
@@ -70,7 +71,7 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
           <TextField label="Profissão / Cargo" name="profession" value={values.profession} onChange={(event) => setValue("profession", event.target.value)} required />
           <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
           <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
-          <TextField label="Instagram" name="instagram" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />
+          <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} onBlur={(event) => setValue("instagram", normalizeInstagram(event.target.value) ?? event.target.value)} autoCapitalize="none" autoCorrect="off" />
           <TextareaField label="O que você faz e o que oferece?" name="whatIDoAndOffer" value={values.whatIDoAndOffer} onChange={(event) => setValue("whatIDoAndOffer", event.target.value)} helper="Descreva brevemente sua atuação, serviços ou produtos." maxLength={500} required />
           <TextareaField label="Com quem gostaria de se conectar?" name="idealAudience" value={values.idealAudience} onChange={(event) => setValue("idealAudience", event.target.value)} helper="Descreva o tipo de pessoa, empresa ou área que você busca." maxLength={500} required />
           <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Áreas de interesse</legend><p className="text-xs leading-4 text-conectar-muted">Selecione áreas para receber sugestões de possíveis conexões.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id)} />)}</div></fieldset>

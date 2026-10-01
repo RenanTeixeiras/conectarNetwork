@@ -5,6 +5,7 @@ import { useActionState, useState, type Dispatch, type SetStateAction } from "re
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { completeGuestOnboarding, type GuestOnboardingState } from "@/actions/guest.actions";
 import { Button, TextareaField, TextField } from "@/components/ui/primitives";
+import { normalizeInstagram } from "@/lib/normalization/instagram";
 
 type Tag = { category: string | null; id: string; name: string };
 type Values = {
@@ -71,7 +72,7 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
               <TextField label="Profissão / Cargo" name="profession" value={values.profession} onChange={(event) => setValue("profession", event.target.value)} required />
               <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
               <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" placeholder="(71) 99999-9999" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
-              <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />
+              <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} onBlur={(event) => setValue("instagram", normalizeInstagram(event.target.value) ?? event.target.value)} autoCapitalize="none" autoCorrect="off" />
             </>}
             {step === 2 && <>
                 <TextareaField label="O que você faz e o que oferece?" name="whatIDoAndOffer" value={values.whatIDoAndOffer} onChange={(event) => setValue("whatIDoAndOffer", event.target.value)} helper="Descreva brevemente sua atuação, serviços ou produtos." maxLength={500} required />

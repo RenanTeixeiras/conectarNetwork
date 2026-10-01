@@ -4,6 +4,7 @@ import { rankOpportunities } from "@/lib/matching/opportunities";
 import { getSignedProfilePhotoUrls } from "@/lib/profile-photo";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createConnectionMessage } from "@/lib/whatsapp-message";
+import { instagramProfileUrl, normalizeInstagram } from "@/lib/normalization/instagram";
 
 function displayName(firstName: string, lastName: string) {
   return `${firstName} ${lastName}`;
@@ -80,7 +81,7 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
   const contact = {
     ...(preferences?.share_whatsapp ? { whatsapp: safeWhatsApp(profile.whatsapp_phone, createConnectionMessage({ ...contactContext, recipientFirstName: profile.first_name, recipientIdealAudience: profile.ideal_audience })) } : {}),
     ...(preferences?.share_linkedin ? { linkedin: safeHttpUrl(profile.linkedin_url) } : {}),
-    ...(preferences?.share_instagram ? { instagram: safeHttpUrl(profile.instagram_url) } : {}),
+    ...(preferences?.share_instagram ? { instagram: instagramProfileUrl(profile.instagram_url) } : {}),
   };
 
   const photoUrls = await getSignedProfilePhotoUrls([profile.photo_url]);
@@ -125,7 +126,7 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
     firstName: profile.first_name,
     id: profile.id,
     idealAudience: profile.ideal_audience,
-    instagram: profile.instagram_url ?? "",
+    instagram: normalizeInstagram(profile.instagram_url) ?? profile.instagram_url ?? "",
     lastName: profile.last_name,
     linkedin: profile.linkedin_url ?? "",
     photoUrl: profile.photo_url ? photoUrls.get(profile.photo_url) ?? null : null,
