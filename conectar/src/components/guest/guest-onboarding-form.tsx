@@ -60,6 +60,8 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
             <input type="hidden" name="segment" value="" />
             <input type="hidden" name="city" value="" />
             <input type="hidden" name="linkedin" value="" />
+            <input type="hidden" name="whatsapp" value={values.whatsapp} />
+            <input type="hidden" name="instagram" value={values.instagram} />
             <input type="hidden" name="whatIDoAndOffer" value={values.whatIDoAndOffer} />
             <input type="hidden" name="idealAudience" value={values.idealAudience} />
             {targetTagIds.map((tagId) => <input key={`target-${tagId}`} type="hidden" name="targetTagIds" value={tagId} />)}
