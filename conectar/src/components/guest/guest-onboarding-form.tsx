@@ -16,7 +16,6 @@ type Values = {
   profession: string;
   segment: string;
   shareContacts: boolean;
-  targetAudience: string;
   whatsapp: string;
   whatIDo: string;
   whatIOffer: string;
@@ -35,13 +34,11 @@ function toggleTag(tagId: string, setter: Dispatch<SetStateAction<string[]>>) {
 export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { eventSlug: string; firstName: string; lastName: string; tags: Tag[] }) {
   const [step, setStep] = useState(1);
   const [state, formAction, isPending] = useActionState(completeGuestOnboarding, initialState);
-  const [offerTagIds, setOfferTagIds] = useState<string[]>([]);
   const [targetTagIds, setTargetTagIds] = useState<string[]>([]);
   const segmentTags = tags.filter((tag) => tag.category === "segmento");
-  const offerTags = tags.filter((tag) => tag.category !== "interesse");
-  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, targetAudience: "", whatsapp: "", whatIDo: "", whatIOffer: "" });
+  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, whatsapp: "", whatIDo: "", whatIOffer: "" });
   const name = `${firstName} ${lastName}`;
-  const headings = ["Quem é você?", "O que você faz e oferece?", "Quem você ajuda e como podem falar com você?"];
+  const headings = ["Quem é você?", "O que você faz e oferece?", "Seus clientes e como podem falar com você?"];
   const setValue = <Key extends keyof Values>(key: Key, value: Values[Key]) => setValues((current) => ({ ...current, [key]: value }));
 
   return (
@@ -67,7 +64,6 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
             <input type="hidden" name="city" value={values.city} />
             <input type="hidden" name="whatIDo" value={values.whatIDo} />
             <input type="hidden" name="whatIOffer" value={values.whatIOffer} />
-            {offerTagIds.map((tagId) => <input key={`offer-${tagId}`} type="hidden" name="offerTagIds" value={tagId} />)}
             {targetTagIds.map((tagId) => <input key={`target-${tagId}`} type="hidden" name="targetTagIds" value={tagId} />)}
           </>}
           <div className="flex-1 space-y-5">
@@ -80,11 +76,9 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
             {step === 2 && <>
               <TextareaField label="O que você faz?" name="whatIDo" value={values.whatIDo} onChange={(event) => setValue("whatIDo", event.target.value)} helper="Explique em poucas palavras sua atuação profissional." maxLength={500} required />
               <TextareaField label="O que você oferece?" name="whatIOffer" value={values.whatIOffer} onChange={(event) => setValue("whatIOffer", event.target.value)} maxLength={500} required />
-              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Posso ajudar com</legend><div className="flex flex-wrap gap-2">{offerTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={offerTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setOfferTagIds)} />)}</div></fieldset>
             </>}
             {step === 3 && <>
-              <TextareaField label="Quem você ajuda ou atende?" name="targetAudience" value={values.targetAudience} onChange={(event) => setValue("targetAudience", event.target.value)} helper="Descreva o tipo de pessoa, empresa ou segmento que mais se beneficia do que você oferece." maxLength={500} required />
-              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Cliente ideal</legend><p className="text-xs leading-4 text-conectar-muted">Selecione os segmentos de pessoas ou empresas que você quer atender.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setTargetTagIds)} />)}</div></fieldset>
+               <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Quais segmentos você atende?</legend><p className="text-xs leading-4 text-conectar-muted">Selecione os tipos de empresa ou profissional que são seus clientes.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setTargetTagIds)} />)}</div></fieldset>
               <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" placeholder="(71) 99999-9999" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
               <TextField label="LinkedIn" name="linkedin" placeholder="linkedin.com/in/seu-perfil" value={values.linkedin} onChange={(event) => setValue("linkedin", event.target.value)} />
               <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />

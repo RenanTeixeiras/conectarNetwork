@@ -89,11 +89,9 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
     instagram: present(formData.get("instagram")),
     lastName: present(formData.get("lastName")),
     linkedin: present(formData.get("linkedin")),
-    offerTagIds: formData.getAll("offerTagIds"),
     profession: present(formData.get("profession")),
     segment: present(formData.get("segment")),
     shareContacts: formData.get("shareContacts") === "on",
-    targetAudience: present(formData.get("targetAudience")),
     targetTagIds: formData.getAll("targetTagIds"),
     whatsapp: present(formData.get("whatsapp")),
     whatIDo: present(formData.get("whatIDo")),
@@ -108,7 +106,7 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
   const input = parsed.data;
   const activeTags = await getActiveTags();
   if (!input.targetTagIds.every((tagId) => activeTags.some((tag) => tag.id === tagId && tag.category === "segmento"))) {
-    return { error: "Selecione segmentos válidos para o público-alvo." };
+    return { error: "Selecione segmentos válidos dos clientes que você atende." };
   }
   let profileId: string;
   try {
@@ -138,11 +136,9 @@ export async function updateMyProfile(_: ProfileUpdateState, formData: FormData)
     company: present(formData.get("company")),
     instagram: present(formData.get("instagram")),
     linkedin: present(formData.get("linkedin")),
-    offerTagIds: formData.getAll("offerTagIds"),
     profession: present(formData.get("profession")),
     segment: present(formData.get("segment")),
     shareContacts: formData.get("shareContacts") === "on",
-    targetAudience: present(formData.get("targetAudience")),
     targetTagIds: formData.getAll("targetTagIds"),
     whatsapp: present(formData.get("whatsapp")),
     whatIDo: present(formData.get("whatIDo")),
@@ -153,7 +149,7 @@ export async function updateMyProfile(_: ProfileUpdateState, formData: FormData)
   const input = parsed.data;
   const activeTags = await getActiveTags();
   if (!input.targetTagIds.every((tagId) => activeTags.some((tag) => tag.id === tagId && tag.category === "segmento"))) {
-    return { error: "Selecione segmentos válidos para o público-alvo." };
+    return { error: "Selecione segmentos válidos dos clientes que você atende." };
   }
 
   try {

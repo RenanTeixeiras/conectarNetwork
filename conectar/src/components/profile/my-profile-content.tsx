@@ -12,7 +12,7 @@ import { Button, SelectField, TextareaField, TextField } from "@/components/ui/p
 import type { EditableProfile } from "@/types/profiles";
 
 type Tag = { category: string | null; id: string; name: string };
-type Values = Pick<EditableProfile, "city" | "company" | "instagram" | "linkedin" | "profession" | "segment" | "shareContacts" | "targetAudience" | "whatsapp" | "whatIDo" | "whatIOffer">;
+type Values = Pick<EditableProfile, "city" | "company" | "instagram" | "linkedin" | "profession" | "segment" | "shareContacts" | "whatsapp" | "whatIDo" | "whatIOffer">;
 
 const initialState: ProfileUpdateState = {};
 const initialPhotoState: ProfilePhotoState = {};
@@ -27,8 +27,6 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
   const [photoState, photoFormAction, isPhotoPending] = useActionState(uploadMyProfilePhoto, initialPhotoState);
   const photoFormRef = useRef<HTMLFormElement>(null);
   const segmentTags = tags.filter((tag) => tag.category === "segmento");
-  const offerTags = tags.filter((tag) => tag.category !== "interesse");
-  const [offerTagIds, setOfferTagIds] = useState(profile.offerTagIds.filter((tagId) => offerTags.some((tag) => tag.id === tagId)));
   const [targetTagIds, setTargetTagIds] = useState(profile.targetTagIds.filter((tagId) => segmentTags.some((tag) => tag.id === tagId)));
   const [values, setValues] = useState<Values>({
     city: profile.city,
@@ -38,7 +36,6 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
     profession: profile.profession,
     segment: profile.segment || segmentTags[0]?.name || "",
     shareContacts: profile.shareContacts,
-    targetAudience: profile.targetAudience,
     whatsapp: profile.whatsapp,
     whatIDo: profile.whatIDo,
     whatIOffer: profile.whatIOffer,
@@ -55,7 +52,6 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
     profession: values.profession || null,
     segment: values.segment || null,
     tags: profile.tags,
-    targetAudience: values.targetAudience || null,
     whatIDo: values.whatIDo || null,
     whatIOffer: values.whatIOffer || null,
   };
@@ -68,7 +64,6 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
         {!editing && <><ProfileView profile={preview} isOwnProfile /><section className="mt-8 rounded-xl border border-conectar-border-soft bg-white p-4"><h2 className="text-sm font-semibold text-conectar-ink">Foto de perfil</h2><form ref={photoFormRef} action={photoFormAction} className="mt-4 space-y-4"><input type="hidden" name="eventSlug" value={eventSlug} /><PhotoPicker isUploading={isPhotoPending} name="photo" onPhotoReady={() => photoFormRef.current?.requestSubmit()} profileName={preview.name} photoUrl={profile.photoUrl} />{photoState.error && <p role="alert" className="text-sm text-[#b94a48]">{photoState.error}</p>}</form>{profile.photoUrl && <form action={removeMyProfilePhoto} className="mt-3"><input type="hidden" name="eventSlug" value={eventSlug} /><Button type="submit" variant="ghost">Remover foto</Button></form>}</section><Button className="mt-5" type="button" variant="secondary" onClick={() => setEditing(true)}><Pencil className="size-4" />Editar perfil</Button></>}
         {editing && <form action={formAction} className="space-y-5">
           <input type="hidden" name="eventSlug" value={eventSlug} />
-          {offerTagIds.map((tagId) => <input key={`offer-${tagId}`} type="hidden" name="offerTagIds" value={tagId} />)}
           {targetTagIds.map((tagId) => <input key={`target-${tagId}`} type="hidden" name="targetTagIds" value={tagId} />)}
           <TextField label="Profissão / Cargo" name="profession" value={values.profession} onChange={(event) => setValue("profession", event.target.value)} required />
           <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
@@ -76,9 +71,7 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
           <TextField label="Cidade" name="city" value={values.city} onChange={(event) => setValue("city", event.target.value)} />
           <TextareaField label="O que você faz?" name="whatIDo" value={values.whatIDo} onChange={(event) => setValue("whatIDo", event.target.value)} maxLength={500} required />
           <TextareaField label="O que você oferece?" name="whatIOffer" value={values.whatIOffer} onChange={(event) => setValue("whatIOffer", event.target.value)} maxLength={500} required />
-          <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Posso ajudar com</legend><div className="flex flex-wrap gap-2">{offerTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={offerTagIds.includes(tag.id)} onChange={() => toggle(tag.id, offerTagIds, setOfferTagIds)} />)}</div></fieldset>
-          <TextareaField label="Quem você ajuda ou atende?" name="targetAudience" value={values.targetAudience} onChange={(event) => setValue("targetAudience", event.target.value)} helper="Descreva o tipo de pessoa, empresa ou segmento que mais se beneficia do que você oferece." maxLength={500} required />
-          <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Cliente ideal</legend><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggle(tag.id, targetTagIds, setTargetTagIds)} />)}</div></fieldset>
+          <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Quais segmentos você atende?</legend><p className="text-xs leading-4 text-conectar-muted">Selecione os tipos de empresa ou profissional que são seus clientes.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggle(tag.id, targetTagIds, setTargetTagIds)} />)}</div></fieldset>
           <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
           <TextField label="LinkedIn" name="linkedin" value={values.linkedin} onChange={(event) => setValue("linkedin", event.target.value)} />
           <TextField label="Instagram" name="instagram" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />

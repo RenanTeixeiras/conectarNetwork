@@ -10,12 +10,12 @@ const candidates = [
 describe("rankOpportunities", () => {
   it("prioritizes an exact target-segment match", () => {
     const [opportunity] = rankOpportunities(["Arquitetura"], candidates);
-    expect(opportunity).toMatchObject({ label: "Público-alvo compatível", profile: { id: "1" }, score: 100 });
+    expect(opportunity).toMatchObject({ label: "Segmento atendido compatível", profile: { id: "1" }, score: 100 });
   });
 
   it("uses profession equivalence only when the segment does not match", () => {
     const [opportunity] = rankOpportunities(["Marketing"], candidates);
-    expect(opportunity).toMatchObject({ label: "Atuação relacionada ao seu público", profile: { id: "2" }, score: 70 });
+    expect(opportunity).toMatchObject({ label: "Atuação no segmento atendido", profile: { id: "2" }, score: 70 });
   });
 
   it("does not manufacture results for an unrelated target", () => {

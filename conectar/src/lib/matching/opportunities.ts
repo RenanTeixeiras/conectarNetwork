@@ -1,7 +1,7 @@
 import type { ParticipantProfile } from "@/types/profiles";
 
 export type Opportunity = {
-  label: "Atuação relacionada ao seu público" | "Público-alvo compatível";
+  label: "Atuação no segmento atendido" | "Segmento atendido compatível";
   profile: ParticipantProfile;
   reason: string;
   score: number;
@@ -33,9 +33,9 @@ export function rankOpportunities(targetTags: string[], candidates: ParticipantP
     const directTarget = targets.find((target) => target === segment);
     if (directTarget) {
       opportunities.push({
-        label: "Público-alvo compatível",
+        label: "Segmento atendido compatível",
         profile,
-        reason: `Você selecionou ${profile.segment} como público-alvo, e ${profile.name} atua nesse segmento.`,
+        reason: `Você atende o segmento ${profile.segment}, e ${profile.name} atua nessa área.`,
         score: 100,
       });
       continue;
@@ -45,9 +45,9 @@ export function rankOpportunities(targetTags: string[], candidates: ParticipantP
     const professionTarget = targets.find((target) => professionKeywords[target]?.some((keyword) => new RegExp(keyword, "i").test(profession)));
     if (professionTarget) {
       opportunities.push({
-        label: "Atuação relacionada ao seu público" as const,
+        label: "Atuação no segmento atendido" as const,
         profile,
-        reason: `Você selecionou ${professionTarget} como público-alvo, e ${profile.name} atua como ${profile.profession}.`,
+        reason: `Você atende o segmento ${professionTarget}, e ${profile.name} atua como ${profile.profession}.`,
         score: 70,
       });
     }

@@ -15,7 +15,6 @@ export type PublicProfile = ParticipantProfile & {
     whatsapp?: string;
   };
   tags: string[];
-  targetAudience: string | null;
   whatIDo: string | null;
   whatIOffer: string | null;
 };
@@ -28,13 +27,11 @@ export type EditableProfile = {
   instagram: string;
   lastName: string;
   linkedin: string;
-  offerTagIds: string[];
   photoUrl: string | null;
   profession: string;
   segment: string;
   shareContacts: boolean;
   tags: string[];
-  targetAudience: string;
   targetTagIds: string[];
   whatsapp: string;
   whatIDo: string;

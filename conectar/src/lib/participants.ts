@@ -68,8 +68,8 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
   if (!participation) return null;
 
   const [{ data: profile, error: profileError }, { data: profileTags, error: tagsError }, { data: preferences, error: preferencesError }] = await Promise.all([
-    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do, what_i_offer, target_audience, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
-    supabase.from("profile_tags").select("tags!inner(name)").eq("profile_id", profileId).order("created_at", { ascending: true }),
+    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do, what_i_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+    supabase.from("profile_tags").select("tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
   if (profileError || tagsError || preferencesError) throw new Error("Não foi possível carregar o perfil.");
@@ -92,7 +92,6 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
     profession: profile.profession,
     segment: profile.segment,
     tags: profileTags.map((assignment) => assignment.tags.name),
-    targetAudience: profile.target_audience,
     whatIDo: profile.what_i_do,
     whatIOffer: profile.what_i_offer,
   };
@@ -110,8 +109,8 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
   if (!participation) return null;
 
   const [{ data: profile, error: profileError }, { data: assignments, error: assignmentsError }, { data: preferences, error: preferencesError }] = await Promise.all([
-    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do, what_i_offer, target_audience, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
-    supabase.from("profile_tags").select("tag_id, type, tags!inner(name)").eq("profile_id", profileId).in("type", ["OFFER", "TARGET"]).order("created_at", { ascending: true }),
+    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do, what_i_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+    supabase.from("profile_tags").select("tag_id, type, tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
   if (profileError || assignmentsError || preferencesError) throw new Error("Não foi possível carregar seu perfil.");
@@ -126,13 +125,11 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
     instagram: profile.instagram_url ?? "",
     lastName: profile.last_name,
     linkedin: profile.linkedin_url ?? "",
-    offerTagIds: assignments.filter((assignment) => assignment.type === "OFFER").map((assignment) => assignment.tag_id),
     photoUrl: profile.photo_url ? photoUrls.get(profile.photo_url) ?? null : null,
     profession: profile.profession ?? "",
     segment: profile.segment ?? "",
     shareContacts: Boolean(preferences?.share_whatsapp || preferences?.share_linkedin || preferences?.share_instagram),
     tags: assignments.map((assignment) => assignment.tags.name),
-    targetAudience: profile.target_audience ?? "",
     targetTagIds: assignments.filter((assignment) => assignment.type === "TARGET").map((assignment) => assignment.tag_id),
     whatsapp: profile.whatsapp_phone ?? "",
     whatIDo: profile.what_i_do ?? "",

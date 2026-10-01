@@ -18,13 +18,11 @@ export type GuestOnboardingInput = {
   lastName: string;
   linkedin: string;
   normalizedName: string;
-  offerTagIds: string[];
   profession: string;
   segment: string;
   shareInstagram: boolean;
   shareLinkedin: boolean;
   shareWhatsapp: boolean;
-  targetAudience: string;
   targetTagIds: string[];
   whatsapp: string;
   whatIDo: string;
@@ -89,13 +87,13 @@ export async function createGuestParticipant(eventId: string, input: GuestOnboar
     p_last_name: input.lastName,
     p_linkedin_url: input.linkedin,
     p_normalized_name: input.normalizedName,
-    p_offer_tag_ids: input.offerTagIds,
+    p_offer_tag_ids: [],
     p_profession: input.profession,
     p_segment: input.segment,
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_audience: input.targetAudience,
+    p_target_audience: "",
     p_target_tag_ids: input.targetTagIds,
     p_what_i_do: input.whatIDo,
     p_what_i_offer: input.whatIOffer,
@@ -113,14 +111,14 @@ export async function updateGuestProfile(eventId: string, profileId: string, inp
     p_event_id: eventId,
     p_instagram_url: input.instagram,
     p_linkedin_url: input.linkedin,
-    p_offer_tag_ids: input.offerTagIds,
+    p_offer_tag_ids: [],
     p_profile_id: profileId,
     p_profession: input.profession,
     p_segment: input.segment,
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_audience: input.targetAudience,
+    p_target_audience: "",
     p_target_tag_ids: input.targetTagIds,
     p_what_i_do: input.whatIDo,
     p_what_i_offer: input.whatIOffer,

@@ -14,12 +14,10 @@ export const guestOnboardingSchema = guestNameSchema.extend({
   city: z.string().trim().max(120).optional().default(""),
   whatIDo: z.string().trim().min(1, "Descreva o que você faz.").max(500),
   whatIOffer: z.string().trim().min(1, "Descreva o que você oferece.").max(500),
-  targetAudience: z.string().trim().min(1, "Descreva quem você ajuda.").max(500),
   whatsapp: z.string().trim().max(32).optional().default(""),
   linkedin: optionalText,
   instagram: optionalText,
-  offerTagIds: z.array(z.uuid()).max(20),
-  targetTagIds: z.array(z.uuid()).min(1, "Selecione ao menos um público-alvo.").max(20),
+  targetTagIds: z.array(z.uuid()).min(1, "Selecione ao menos um segmento que você atende.").max(20),
   shareContacts: z.boolean(),
 });
 
