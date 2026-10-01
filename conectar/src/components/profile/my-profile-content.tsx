@@ -12,7 +12,7 @@ import { Button, SelectField, TextareaField, TextField } from "@/components/ui/p
 import type { EditableProfile } from "@/types/profiles";
 
 type Tag = { category: string | null; id: string; name: string };
-type Values = Pick<EditableProfile, "city" | "company" | "instagram" | "linkedin" | "profession" | "segment" | "shareContacts" | "whatsapp" | "whatIDo" | "whatIOffer">;
+type Values = Pick<EditableProfile, "city" | "company" | "instagram" | "linkedin" | "profession" | "segment" | "shareContacts" | "whatsapp" | "whatIDoAndOffer">;
 
 const initialState: ProfileUpdateState = {};
 const initialPhotoState: ProfilePhotoState = {};
@@ -37,8 +37,7 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
     segment: profile.segment || segmentTags[0]?.name || "",
     shareContacts: profile.shareContacts,
     whatsapp: profile.whatsapp,
-    whatIDo: profile.whatIDo,
-    whatIOffer: profile.whatIOffer,
+    whatIDoAndOffer: profile.whatIDoAndOffer,
   });
   const setValue = <Key extends keyof Values>(key: Key, value: Values[Key]) => setValues((current) => ({ ...current, [key]: value }));
   const toggle = (tagId: string, selected: string[], setSelected: (value: string[]) => void) => setSelected(selected.includes(tagId) ? selected.filter((id) => id !== tagId) : [...selected, tagId]);
@@ -52,8 +51,7 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
     profession: values.profession || null,
     segment: values.segment || null,
     tags: profile.tags,
-    whatIDo: values.whatIDo || null,
-    whatIOffer: values.whatIOffer || null,
+    whatIDoAndOffer: values.whatIDoAndOffer || null,
   };
 
   return (
@@ -69,8 +67,7 @@ export function MyProfileContent({ eventSlug, networkingReleased, profile, tags 
           <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
           <SelectField label="Segmento" name="segment" value={values.segment} onChange={(event) => setValue("segment", event.target.value)}>{segmentTags.map((tag) => <option key={tag.id} value={tag.name}>{tag.name}</option>)}</SelectField>
           <TextField label="Cidade" name="city" value={values.city} onChange={(event) => setValue("city", event.target.value)} />
-          <TextareaField label="O que você faz?" name="whatIDo" value={values.whatIDo} onChange={(event) => setValue("whatIDo", event.target.value)} maxLength={500} required />
-          <TextareaField label="O que você oferece?" name="whatIOffer" value={values.whatIOffer} onChange={(event) => setValue("whatIOffer", event.target.value)} maxLength={500} required />
+          <TextareaField label="O que você faz e oferece?" name="whatIDoAndOffer" value={values.whatIDoAndOffer} onChange={(event) => setValue("whatIDoAndOffer", event.target.value)} helper="Descreva brevemente sua atuação e os serviços ou produtos que oferece." maxLength={500} required />
           <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Quais segmentos você atende?</legend><p className="text-xs leading-4 text-conectar-muted">Selecione os tipos de empresa ou profissional que são seus clientes.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggle(tag.id, targetTagIds, setTargetTagIds)} />)}</div></fieldset>
           <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
           <TextField label="LinkedIn" name="linkedin" value={values.linkedin} onChange={(event) => setValue("linkedin", event.target.value)} />

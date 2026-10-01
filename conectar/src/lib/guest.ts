@@ -25,8 +25,7 @@ export type GuestOnboardingInput = {
   shareWhatsapp: boolean;
   targetTagIds: string[];
   whatsapp: string;
-  whatIDo: string;
-  whatIOffer: string;
+  whatIDoAndOffer: string;
 };
 
 export async function getOpenEventBySlug(slug: string) {
@@ -93,10 +92,8 @@ export async function createGuestParticipant(eventId: string, input: GuestOnboar
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_audience: "",
     p_target_tag_ids: input.targetTagIds,
-    p_what_i_do: input.whatIDo,
-    p_what_i_offer: input.whatIOffer,
+    p_what_i_do_and_offer: input.whatIDoAndOffer,
     p_whatsapp_phone: input.whatsapp,
   });
   if (error || !data) throw new Error("Não foi possível concluir seu cadastro.");
@@ -118,10 +115,8 @@ export async function updateGuestProfile(eventId: string, profileId: string, inp
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_audience: "",
     p_target_tag_ids: input.targetTagIds,
-    p_what_i_do: input.whatIDo,
-    p_what_i_offer: input.whatIOffer,
+    p_what_i_do_and_offer: input.whatIDoAndOffer,
     p_whatsapp_phone: input.whatsapp,
   });
   if (error) throw new Error("Não foi possível atualizar seu perfil.");

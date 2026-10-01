@@ -68,7 +68,7 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
   if (!participation) return null;
 
   const [{ data: profile, error: profileError }, { data: profileTags, error: tagsError }, { data: preferences, error: preferencesError }] = await Promise.all([
-    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do, what_i_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do_and_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
     supabase.from("profile_tags").select("tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
@@ -92,8 +92,7 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
     profession: profile.profession,
     segment: profile.segment,
     tags: profileTags.map((assignment) => assignment.tags.name),
-    whatIDo: profile.what_i_do,
-    whatIOffer: profile.what_i_offer,
+    whatIDoAndOffer: profile.what_i_do_and_offer,
   };
 }
 
@@ -109,7 +108,7 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
   if (!participation) return null;
 
   const [{ data: profile, error: profileError }, { data: assignments, error: assignmentsError }, { data: preferences, error: preferencesError }] = await Promise.all([
-    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do, what_i_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do_and_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
     supabase.from("profile_tags").select("tag_id, type, tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
@@ -132,8 +131,7 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
     tags: assignments.map((assignment) => assignment.tags.name),
     targetTagIds: assignments.filter((assignment) => assignment.type === "TARGET").map((assignment) => assignment.tag_id),
     whatsapp: profile.whatsapp_phone ?? "",
-    whatIDo: profile.what_i_do ?? "",
-    whatIOffer: profile.what_i_offer ?? "",
+    whatIDoAndOffer: profile.what_i_do_and_offer,
   };
 }
 

@@ -94,8 +94,7 @@ export async function completeGuestOnboarding(_: GuestOnboardingState, formData:
     shareContacts: formData.get("shareContacts") === "on",
     targetTagIds: formData.getAll("targetTagIds"),
     whatsapp: present(formData.get("whatsapp")),
-    whatIDo: present(formData.get("whatIDo")),
-    whatIOffer: present(formData.get("whatIOffer")),
+    whatIDoAndOffer: present(formData.get("whatIDoAndOffer")),
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 
@@ -141,8 +140,7 @@ export async function updateMyProfile(_: ProfileUpdateState, formData: FormData)
     shareContacts: formData.get("shareContacts") === "on",
     targetTagIds: formData.getAll("targetTagIds"),
     whatsapp: present(formData.get("whatsapp")),
-    whatIDo: present(formData.get("whatIDo")),
-    whatIOffer: present(formData.get("whatIOffer")),
+    whatIDoAndOffer: present(formData.get("whatIDoAndOffer")),
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
 

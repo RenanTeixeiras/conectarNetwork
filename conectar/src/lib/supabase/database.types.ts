@@ -253,10 +253,8 @@ export type Database = {
           photo_url: string | null;
           profession: string | null;
           segment: string | null;
-          target_audience: string | null;
           updated_at: string;
-          what_i_do: string | null;
-          what_i_offer: string | null;
+          what_i_do_and_offer: string;
           whatsapp_phone: string | null;
         };
         Insert: {
@@ -274,10 +272,8 @@ export type Database = {
           photo_url?: string | null;
           profession?: string | null;
           segment?: string | null;
-          target_audience?: string | null;
           updated_at?: string;
-          what_i_do?: string | null;
-          what_i_offer?: string | null;
+          what_i_do_and_offer: string;
           whatsapp_phone?: string | null;
         };
         Update: {
@@ -295,10 +291,8 @@ export type Database = {
           photo_url?: string | null;
           profession?: string | null;
           segment?: string | null;
-          target_audience?: string | null;
           updated_at?: string;
-          what_i_do?: string | null;
-          what_i_offer?: string | null;
+          what_i_do_and_offer?: string;
           whatsapp_phone?: string | null;
         };
         Relationships: [];
@@ -371,10 +365,8 @@ export type Database = {
           p_share_instagram: boolean;
           p_share_linkedin: boolean;
           p_share_whatsapp: boolean;
-          p_target_audience: string;
           p_target_tag_ids: string[];
-          p_what_i_do: string;
-          p_what_i_offer: string;
+          p_what_i_do_and_offer: string;
           p_whatsapp_phone: string;
         };
         Returns: string;
@@ -393,10 +385,8 @@ export type Database = {
           p_share_instagram: boolean;
           p_share_linkedin: boolean;
           p_share_whatsapp: boolean;
-          p_target_audience: string;
           p_target_tag_ids: string[];
-          p_what_i_do: string;
-          p_what_i_offer: string;
+          p_what_i_do_and_offer: string;
           p_whatsapp_phone: string;
         };
         Returns: undefined;

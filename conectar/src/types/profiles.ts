@@ -15,8 +15,7 @@ export type PublicProfile = ParticipantProfile & {
     whatsapp?: string;
   };
   tags: string[];
-  whatIDo: string | null;
-  whatIOffer: string | null;
+  whatIDoAndOffer: string | null;
 };
 
 export type EditableProfile = {
@@ -34,6 +33,5 @@ export type EditableProfile = {
   tags: string[];
   targetTagIds: string[];
   whatsapp: string;
-  whatIDo: string;
-  whatIOffer: string;
+  whatIDoAndOffer: string;
 };

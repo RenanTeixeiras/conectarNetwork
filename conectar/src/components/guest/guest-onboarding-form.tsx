@@ -17,8 +17,7 @@ type Values = {
   segment: string;
   shareContacts: boolean;
   whatsapp: string;
-  whatIDo: string;
-  whatIOffer: string;
+  whatIDoAndOffer: string;
 };
 
 const initialState: GuestOnboardingState = {};
@@ -36,7 +35,7 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
   const [state, formAction, isPending] = useActionState(completeGuestOnboarding, initialState);
   const [targetTagIds, setTargetTagIds] = useState<string[]>([]);
   const segmentTags = tags.filter((tag) => tag.category === "segmento");
-  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, whatsapp: "", whatIDo: "", whatIOffer: "" });
+  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, whatsapp: "", whatIDoAndOffer: "" });
   const name = `${firstName} ${lastName}`;
   const headings = ["Quem é você?", "O que você faz e oferece?", "Seus clientes e como podem falar com você?"];
   const setValue = <Key extends keyof Values>(key: Key, value: Values[Key]) => setValues((current) => ({ ...current, [key]: value }));
@@ -62,8 +61,7 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
             <input type="hidden" name="company" value={values.company} />
             <input type="hidden" name="segment" value={values.segment} />
             <input type="hidden" name="city" value={values.city} />
-            <input type="hidden" name="whatIDo" value={values.whatIDo} />
-            <input type="hidden" name="whatIOffer" value={values.whatIOffer} />
+             <input type="hidden" name="whatIDoAndOffer" value={values.whatIDoAndOffer} />
             {targetTagIds.map((tagId) => <input key={`target-${tagId}`} type="hidden" name="targetTagIds" value={tagId} />)}
           </>}
           <div className="flex-1 space-y-5">
@@ -74,8 +72,7 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
               <TextField label="Cidade" name="city" value={values.city} onChange={(event) => setValue("city", event.target.value)} />
             </>}
             {step === 2 && <>
-              <TextareaField label="O que você faz?" name="whatIDo" value={values.whatIDo} onChange={(event) => setValue("whatIDo", event.target.value)} helper="Explique em poucas palavras sua atuação profissional." maxLength={500} required />
-              <TextareaField label="O que você oferece?" name="whatIOffer" value={values.whatIOffer} onChange={(event) => setValue("whatIOffer", event.target.value)} maxLength={500} required />
+               <TextareaField label="O que você faz e oferece?" name="whatIDoAndOffer" value={values.whatIDoAndOffer} onChange={(event) => setValue("whatIDoAndOffer", event.target.value)} helper="Descreva brevemente sua atuação e os serviços ou produtos que oferece." maxLength={500} required />
             </>}
             {step === 3 && <>
                <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Quais segmentos você atende?</legend><p className="text-xs leading-4 text-conectar-muted">Selecione os tipos de empresa ou profissional que são seus clientes.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setTargetTagIds)} />)}</div></fieldset>

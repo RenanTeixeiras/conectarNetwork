@@ -6,8 +6,7 @@ export type Profile = {
   segment: string;
   city: string;
   bio: string;
-  whatIDo: string;
-  whatIOffer: string;
+  whatIDoAndOffer: string;
   whoIHelp: string;
   tags: string[];
   offerTags: string[];
@@ -35,8 +34,7 @@ export const currentProfile: Profile = {
   segment: "Tecnologia",
   city: "Salvador - BA",
   bio: "Crio produtos digitais que tornam processos mais simples e úteis.",
-  whatIDo: "Desenvolvo sistemas, integrações, automações e produtos digitais.",
-  whatIOffer: "Software, automação e soluções digitais para empresas.",
+  whatIDoAndOffer: "Desenvolvo sistemas, integrações, automações e produtos digitais. Ofereço software, automação e soluções digitais para empresas.",
   whoIHelp: "Empresas que precisam organizar processos, vendas e atendimento.",
   tags: ["Tecnologia", "Dados", "Automação"],
   offerTags: ["Tecnologia", "Automação", "Dados"],
@@ -56,8 +54,7 @@ export const profiles: Profile[] = [
     segment: "Arquitetura",
     city: "Salvador - BA",
     bio: "Arquiteta especializada em projetos residenciais e comerciais.",
-    whatIDo: "Desenvolvo projetos arquitetônicos, interiores e acompanho obras.",
-    whatIOffer: "Arquitetura, reformas e planejamento de espaços.",
+    whatIDoAndOffer: "Desenvolvo projetos arquitetônicos, interiores e acompanho obras. Ofereço arquitetura, reformas e planejamento de espaços.",
     whoIHelp: "Pessoas e empresas que precisam projetar, reformar ou organizar espaços.",
     tags: ["Arquitetura", "Construção", "Interiores"],
     offerTags: ["Arquitetura", "Construção"],
@@ -72,8 +69,7 @@ export const profiles: Profile[] = [
     segment: "Gestão",
     city: "Salvador - BA",
     bio: "Ajudo empresas a organizarem decisões, processos e crescimento.",
-    whatIDo: "Atuo com estratégia, gestão e estruturação comercial.",
-    whatIOffer: "Planejamento, gestão e desenvolvimento de negócios.",
+    whatIDoAndOffer: "Atuo com estratégia, gestão e estruturação comercial. Ofereço planejamento, gestão e desenvolvimento de negócios.",
     whoIHelp: "Empresas em crescimento que precisam de estratégia e organização comercial.",
     tags: ["Gestão", "Estratégia", "Negócios"],
     offerTags: ["Gestão", "Estratégia"],
@@ -88,8 +84,7 @@ export const profiles: Profile[] = [
     segment: "Marketing",
     city: "Salvador - BA",
     bio: "Estratégia de marca e comunicação para negócios em crescimento.",
-    whatIDo: "Desenho posicionamento, campanhas e conteúdo para empresas.",
-    whatIOffer: "Marketing, marca e comunicação estratégica.",
+    whatIDoAndOffer: "Desenho posicionamento, campanhas e conteúdo para empresas. Ofereço marketing, marca e comunicação estratégica.",
     whoIHelp: "Empresas que querem fortalecer marca, campanhas e vendas.",
     tags: ["Marketing", "Marca", "Vendas"],
     offerTags: ["Marketing", "Vendas"],
@@ -104,8 +99,7 @@ export const profiles: Profile[] = [
     segment: "Finanças",
     city: "Salvador - BA",
     bio: "Contabilidade próxima para negócios que querem crescer com segurança.",
-    whatIDo: "Cuido da estrutura contábil e financeira de empresas.",
-    whatIOffer: "Contabilidade, planejamento tributário e organização financeira.",
+    whatIDoAndOffer: "Cuido da estrutura contábil e financeira de empresas. Ofereço contabilidade, planejamento tributário e organização financeira.",
     whoIHelp: "Empreendedores e empresas que precisam organizar finanças e contabilidade.",
     tags: ["Finanças", "Gestão", "Empreendedorismo"],
     offerTags: ["Finanças", "Gestão"],
@@ -120,8 +114,7 @@ export const profiles: Profile[] = [
     segment: "Jurídico",
     city: "Salvador - BA",
     bio: "Advogada com foco em contratos e relações empresariais.",
-    whatIDo: "Atuo preventivamente em contratos e decisões empresariais.",
-    whatIOffer: "Jurídico, contratos e estruturação societária.",
+    whatIDoAndOffer: "Atuo preventivamente em contratos e decisões empresariais. Ofereço suporte jurídico, contratos e estruturação societária.",
     whoIHelp: "Empresas que precisam estruturar contratos e decisões societárias.",
     tags: ["Jurídico", "Contratos", "Negócios"],
     offerTags: ["Jurídico", "Contratos"],
@@ -136,8 +129,7 @@ export const profiles: Profile[] = [
     segment: "Empreendedorismo",
     city: "Salvador - BA",
     bio: "Empreendedor interessado em construir negócios sustentáveis.",
-    whatIDo: "Desenvolvo e acompanho negócios em fase de crescimento.",
-    whatIOffer: "Parcerias, visão comercial e novos negócios.",
+    whatIDoAndOffer: "Desenvolvo e acompanho negócios em fase de crescimento. Ofereço parcerias, visão comercial e novos negócios.",
     whoIHelp: "Pessoas e empresas que buscam novos negócios, parceiros e crescimento comercial.",
     tags: ["Empreendedorismo", "Vendas", "Parcerias"],
     offerTags: ["Empreendedorismo", "Parcerias"],
