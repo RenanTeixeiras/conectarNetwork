@@ -25,7 +25,7 @@ export const guestOnboardingSchema = guestNameSchema.extend({
     }
     return handle;
   }),
-  targetTagIds: z.array(z.uuid()).max(20),
+  targetTagIds: z.array(z.uuid()),
   shareContacts: z.boolean(),
 });
 
