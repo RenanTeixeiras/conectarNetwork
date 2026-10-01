@@ -1,5 +1,6 @@
 import "server-only";
 import type { EditableProfile, ParticipantProfile, PublicProfile } from "@/types/profiles";
+import { rankOpportunities } from "@/lib/matching/opportunities";
 import { getSignedProfilePhotoUrls } from "@/lib/profile-photo";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
@@ -36,7 +37,7 @@ export async function getCheckedInParticipants(eventId: string): Promise<Partici
 
   const { data: profiles, error: profileError } = await supabase
     .from("profiles")
-    .select("id, first_name, last_name, profession, company, segment, photo_url")
+    .select("id, first_name, last_name, profession, company, segment, what_i_do_and_offer, photo_url")
     .in("id", profileIds)
     .eq("is_active", true)
     .order("first_name", { ascending: true })
@@ -51,6 +52,7 @@ export async function getCheckedInParticipants(eventId: string): Promise<Partici
     photoUrl: profile.photo_url ? photoUrls.get(profile.photo_url) ?? null : null,
     profession: profile.profession,
     segment: profile.segment,
+    whatIDoAndOffer: profile.what_i_do_and_offer,
   }));
 }
 
@@ -66,11 +68,12 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
   if (participationError) throw new Error("Não foi possível carregar o perfil.");
   if (!participation) return null;
 
-  const [{ data: profile, error: profileError }, { data: preferences, error: preferencesError }] = await Promise.all([
-    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do_and_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+  const [{ data: profile, error: profileError }, { data: profileTags, error: tagsError }, { data: preferences, error: preferencesError }] = await Promise.all([
+    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, bio, what_i_do_and_offer, ideal_audience, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+    supabase.from("profile_tags").select("tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
-  if (profileError || preferencesError) throw new Error("Não foi possível carregar o perfil.");
+  if (profileError || tagsError || preferencesError) throw new Error("Não foi possível carregar o perfil.");
   if (!profile) return null;
 
   const contact = {
@@ -85,10 +88,12 @@ export async function getCheckedInPublicProfile(eventId: string, profileId: stri
     company: profile.company,
     contact,
     id: profile.id,
+    idealAudience: profile.ideal_audience,
     name: displayName(profile.first_name, profile.last_name),
     photoUrl: profile.photo_url ? photoUrls.get(profile.photo_url) ?? null : null,
     profession: profile.profession,
     segment: profile.segment,
+    targetTags: profileTags.map((assignment) => assignment.tags.name),
     whatIDoAndOffer: profile.what_i_do_and_offer,
   };
 }
@@ -104,11 +109,12 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
   if (participationError) throw new Error("Não foi possível carregar seu perfil.");
   if (!participation) return null;
 
-  const [{ data: profile, error: profileError }, { data: preferences, error: preferencesError }] = await Promise.all([
-    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do_and_offer, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+  const [{ data: profile, error: profileError }, { data: assignments, error: assignmentsError }, { data: preferences, error: preferencesError }] = await Promise.all([
+    supabase.from("profiles").select("id, first_name, last_name, profession, company, segment, city, what_i_do_and_offer, ideal_audience, whatsapp_phone, linkedin_url, instagram_url, photo_url").eq("id", profileId).eq("is_active", true).maybeSingle(),
+    supabase.from("profile_tags").select("tag_id, tags!inner(name)").eq("profile_id", profileId).eq("type", "TARGET").order("created_at", { ascending: true }),
     supabase.from("event_contact_preferences").select("share_whatsapp, share_linkedin, share_instagram").eq("event_id", eventId).eq("profile_id", profileId).maybeSingle(),
   ]);
-  if (profileError || preferencesError) throw new Error("Não foi possível carregar seu perfil.");
+  if (profileError || assignmentsError || preferencesError) throw new Error("Não foi possível carregar seu perfil.");
   if (!profile) return null;
 
   const photoUrls = await getSignedProfilePhotoUrls([profile.photo_url]);
@@ -117,6 +123,7 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
     company: profile.company ?? "",
     firstName: profile.first_name,
     id: profile.id,
+    idealAudience: profile.ideal_audience,
     instagram: profile.instagram_url ?? "",
     lastName: profile.last_name,
     linkedin: profile.linkedin_url ?? "",
@@ -124,7 +131,25 @@ export async function getEditableProfile(eventId: string, profileId: string): Pr
     profession: profile.profession ?? "",
     segment: profile.segment ?? "",
     shareContacts: Boolean(preferences?.share_whatsapp || preferences?.share_linkedin || preferences?.share_instagram),
+    targetTagIds: assignments.map((assignment) => assignment.tag_id),
     whatsapp: profile.whatsapp_phone ?? "",
     whatIDoAndOffer: profile.what_i_do_and_offer,
+  };
+}
+
+export async function getOpportunities(eventId: string, profileId: string) {
+  const supabase = createServerSupabaseClient();
+  const [{ data: targetTags, error: targetTagsError }, participants] = await Promise.all([
+    supabase.from("profile_tags").select("tags!inner(name, category)").eq("profile_id", profileId).eq("type", "TARGET"),
+    getCheckedInParticipants(eventId),
+  ]);
+  if (targetTagsError) throw new Error("Não foi possível carregar suas oportunidades.");
+
+  const targetSegments = targetTags
+    .filter((assignment) => assignment.tags.category === "segmento")
+    .map((assignment) => assignment.tags.name);
+  return {
+    hasTargetSegments: targetSegments.length > 0,
+    opportunities: rankOpportunities(targetSegments, participants.filter((participant) => participant.id !== profileId)),
   };
 }

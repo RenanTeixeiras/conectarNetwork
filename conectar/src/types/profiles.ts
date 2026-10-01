@@ -5,6 +5,7 @@ export type ParticipantProfile = {
   photoUrl: string | null;
   profession: string | null;
   segment: string | null;
+  whatIDoAndOffer: string;
 };
 
 export type PublicProfile = ParticipantProfile & {
@@ -14,7 +15,8 @@ export type PublicProfile = ParticipantProfile & {
     linkedin?: string;
     whatsapp?: string;
   };
-  whatIDoAndOffer: string | null;
+  idealAudience: string;
+  targetTags: string[];
 };
 
 export type EditableProfile = {
@@ -22,6 +24,7 @@ export type EditableProfile = {
   company: string;
   firstName: string;
   id: string;
+  idealAudience: string;
   instagram: string;
   lastName: string;
   linkedin: string;
@@ -29,6 +32,7 @@ export type EditableProfile = {
   profession: string;
   segment: string;
   shareContacts: boolean;
+  targetTagIds: string[];
   whatsapp: string;
   whatIDoAndOffer: string;
 };

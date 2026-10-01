@@ -14,6 +14,7 @@ export type GuestOnboardingInput = {
   city: string;
   company: string;
   firstName: string;
+  idealAudience: string;
   instagram: string;
   lastName: string;
   linkedin: string;
@@ -23,6 +24,7 @@ export type GuestOnboardingInput = {
   shareInstagram: boolean;
   shareLinkedin: boolean;
   shareWhatsapp: boolean;
+  targetTagIds: string[];
   whatsapp: string;
   whatIDoAndOffer: string;
 };
@@ -82,16 +84,17 @@ export async function createGuestParticipant(eventId: string, input: GuestOnboar
     p_event_id: eventId,
     p_first_name: input.firstName,
     p_instagram_url: input.instagram,
+    p_ideal_audience: input.idealAudience,
     p_last_name: input.lastName,
     p_linkedin_url: input.linkedin,
     p_normalized_name: input.normalizedName,
     p_offer_tag_ids: [],
     p_profession: input.profession,
-    p_segment: input.segment,
+    p_segment: "",
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_tag_ids: [],
+    p_target_tag_ids: input.targetTagIds,
     p_what_i_do_and_offer: input.whatIDoAndOffer,
     p_whatsapp_phone: input.whatsapp,
   });
@@ -105,16 +108,17 @@ export async function updateGuestProfile(eventId: string, profileId: string, inp
     p_city: input.city,
     p_company: input.company,
     p_event_id: eventId,
+    p_ideal_audience: input.idealAudience,
     p_instagram_url: input.instagram,
     p_linkedin_url: input.linkedin,
     p_offer_tag_ids: [],
     p_profile_id: profileId,
     p_profession: input.profession,
-    p_segment: input.segment,
+    p_segment: "",
     p_share_instagram: input.shareInstagram,
     p_share_linkedin: input.shareLinkedin,
     p_share_whatsapp: input.shareWhatsapp,
-    p_target_tag_ids: [],
+    p_target_tag_ids: input.targetTagIds,
     p_what_i_do_and_offer: input.whatIDoAndOffer,
     p_whatsapp_phone: input.whatsapp,
   });

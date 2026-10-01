@@ -245,6 +245,7 @@ export type Database = {
           created_at: string;
           first_name: string;
           id: string;
+          ideal_audience: string;
           instagram_url: string | null;
           is_active: boolean;
           last_name: string;
@@ -264,6 +265,7 @@ export type Database = {
           created_at?: string;
           first_name: string;
           id?: string;
+          ideal_audience: string;
           instagram_url?: string | null;
           is_active?: boolean;
           last_name: string;
@@ -283,6 +285,7 @@ export type Database = {
           created_at?: string;
           first_name?: string;
           id?: string;
+          ideal_audience?: string;
           instagram_url?: string | null;
           is_active?: boolean;
           last_name?: string;
@@ -355,6 +358,7 @@ export type Database = {
           p_company: string;
           p_event_id: string;
           p_first_name: string;
+          p_ideal_audience: string;
           p_instagram_url: string;
           p_last_name: string;
           p_linkedin_url: string;
@@ -376,6 +380,7 @@ export type Database = {
           p_city: string;
           p_company: string;
           p_event_id: string;
+          p_ideal_audience: string;
           p_instagram_url: string;
           p_linkedin_url: string;
           p_offer_tag_ids: string[];

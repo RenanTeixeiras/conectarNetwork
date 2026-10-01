@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useState, type Dispatch, type SetStateAction } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { completeGuestOnboarding, type GuestOnboardingState } from "@/actions/guest.actions";
-import { PhotoPicker } from "@/components/profile/photo-picker";
-import { Button, SelectField, TextareaField, TextField } from "@/components/ui/primitives";
+import { Button, TextareaField, TextField } from "@/components/ui/primitives";
 
 type Tag = { category: string | null; id: string; name: string };
 type Values = {
   city: string;
   company: string;
+  idealAudience: string;
   instagram: string;
   linkedin: string;
   profession: string;
@@ -22,13 +22,21 @@ type Values = {
 
 const initialState: GuestOnboardingState = {};
 
+function TagCheckbox({ tag, selected, onChange }: { tag: Tag; selected: boolean; onChange: () => void }) {
+  return <label className="cursor-pointer"><input className="peer sr-only" type="checkbox" checked={selected} onChange={onChange} /><span className="inline-flex min-h-7 items-center rounded-full bg-conectar-green-50 px-2.5 py-1 text-xs font-medium text-conectar-green-800 peer-checked:bg-conectar-green-800 peer-checked:text-white">{tag.name}</span></label>;
+}
+
+function toggleTag(tagId: string, setter: Dispatch<SetStateAction<string[]>>) {
+  setter((selected) => selected.includes(tagId) ? selected.filter((id) => id !== tagId) : [...selected, tagId]);
+}
+
 export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { eventSlug: string; firstName: string; lastName: string; tags: Tag[] }) {
   const [step, setStep] = useState(1);
   const [state, formAction, isPending] = useActionState(completeGuestOnboarding, initialState);
+  const [targetTagIds, setTargetTagIds] = useState<string[]>([]);
   const segmentTags = tags.filter((tag) => tag.category === "segmento");
-  const [values, setValues] = useState<Values>({ city: "", company: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, whatsapp: "", whatIDoAndOffer: "" });
-  const name = `${firstName} ${lastName}`;
-  const headings = ["Quem é você?", "Fale sobre você", "Como podem falar com você?"];
+  const [values, setValues] = useState<Values>({ city: "", company: "", idealAudience: "", instagram: "", linkedin: "", profession: "", segment: segmentTags[0]?.name ?? "Outro", shareContacts: false, whatsapp: "", whatIDoAndOffer: "" });
+  const headings = ["Cadastro", "O que você faz e o que oferece?", "Qual seu público ideal?"];
   const setValue = <Key extends keyof Values>(key: Key, value: Values[Key]) => setValues((current) => ({ ...current, [key]: value }));
 
   return (
@@ -46,28 +54,29 @@ export function GuestOnboardingForm({ eventSlug, firstName, lastName, tags }: { 
            <input type="hidden" name="eventSlug" value={eventSlug} />
            <input type="hidden" name="firstName" value={firstName} />
            <input type="hidden" name="lastName" value={lastName} />
-           <div className={step === 1 ? "" : "hidden"}><PhotoPicker name="photo" profileName={name} /></div>
           {step === 3 && <>
             <input type="hidden" name="profession" value={values.profession} />
             <input type="hidden" name="company" value={values.company} />
-            <input type="hidden" name="segment" value={values.segment} />
-            <input type="hidden" name="city" value={values.city} />
-             <input type="hidden" name="whatIDoAndOffer" value={values.whatIDoAndOffer} />
+            <input type="hidden" name="segment" value="" />
+            <input type="hidden" name="city" value="" />
+            <input type="hidden" name="linkedin" value="" />
+            <input type="hidden" name="whatIDoAndOffer" value={values.whatIDoAndOffer} />
+            <input type="hidden" name="idealAudience" value={values.idealAudience} />
+            {targetTagIds.map((tagId) => <input key={`target-${tagId}`} type="hidden" name="targetTagIds" value={tagId} />)}
           </>}
           <div className="flex-1 space-y-5">
             {step === 1 && <>
               <TextField label="Profissão / Cargo" name="profession" value={values.profession} onChange={(event) => setValue("profession", event.target.value)} required />
               <TextField label="Empresa" name="company" value={values.company} onChange={(event) => setValue("company", event.target.value)} />
-              <SelectField label="Segmento" name="segment" value={values.segment} onChange={(event) => setValue("segment", event.target.value)}>{segmentTags.map((tag) => <option key={tag.id} value={tag.name}>{tag.name}</option>)}</SelectField>
-              <TextField label="Cidade" name="city" value={values.city} onChange={(event) => setValue("city", event.target.value)} />
+              <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" placeholder="(71) 99999-9999" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
+              <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />
             </>}
             {step === 2 && <>
-                <TextareaField label="Fale sobre você" name="whatIDoAndOffer" value={values.whatIDoAndOffer} onChange={(event) => setValue("whatIDoAndOffer", event.target.value)} helper="Conte brevemente sobre sua atuação, interesses ou o que gostaria de compartilhar." maxLength={500} required />
+                <TextareaField label="O que você faz e o que oferece?" name="whatIDoAndOffer" value={values.whatIDoAndOffer} onChange={(event) => setValue("whatIDoAndOffer", event.target.value)} helper="Descreva brevemente sua atuação, serviços ou produtos." maxLength={500} required />
             </>}
             {step === 3 && <>
-              <TextField label="WhatsApp" name="whatsapp" type="tel" inputMode="tel" placeholder="(71) 99999-9999" value={values.whatsapp} onChange={(event) => setValue("whatsapp", event.target.value)} />
-              <TextField label="LinkedIn" name="linkedin" placeholder="linkedin.com/in/seu-perfil" value={values.linkedin} onChange={(event) => setValue("linkedin", event.target.value)} />
-              <TextField label="Instagram" name="instagram" placeholder="@seuusuario" value={values.instagram} onChange={(event) => setValue("instagram", event.target.value)} />
+              <TextareaField label="Com quem gostaria de se conectar?" name="idealAudience" value={values.idealAudience} onChange={(event) => setValue("idealAudience", event.target.value)} helper="Descreva o tipo de pessoa, empresa ou área que você busca." maxLength={500} required />
+              <fieldset className="space-y-3"><legend className="text-[13px] font-medium text-conectar-ink-soft">Áreas de interesse</legend><p className="text-xs leading-4 text-conectar-muted">Selecione áreas para receber sugestões de possíveis conexões.</p><div className="flex flex-wrap gap-2">{segmentTags.map((tag) => <TagCheckbox key={tag.id} tag={tag} selected={targetTagIds.includes(tag.id)} onChange={() => toggleTag(tag.id, setTargetTagIds)} />)}</div></fieldset>
               <label className="flex items-start gap-3 rounded-xl bg-conectar-green-50 p-4 text-sm leading-5 text-conectar-ink-soft"><input className="mt-1 size-4 accent-[#194828]" name="shareContacts" type="checkbox" checked={values.shareContacts} onChange={(event) => setValue("shareContacts", event.target.checked)} />Autorizo que meus dados de contato sejam exibidos aos participantes deste encontro.</label>
               {state.error && <p role="alert" className="text-sm text-[#b94a48]">{state.error}</p>}
             </>}
